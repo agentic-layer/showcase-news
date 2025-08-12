@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: summarizer-agent
+  namespace: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: summarizer-agent
+  template:
+    metadata:
+      labels:
+        app: summarizer-agent
+    spec:
+      containers:
+      - name: summarizer-agent
+        image: summarizer_agent:latest
+        ports:
+        - containerPort: 8000
+        readinessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          httpGet:
+            port: 8000
+            path: /health
+        livenessProbe:
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          httpGet:
+            port: 8000
+            path: /health
+        env:
+        - name: OTEL_SERVICE_NAME
+          value: summarizer-agent
+        - name: A2A_AGENT_CARD_URL
+          value: http://summarizer-agent:8000/
+        envFrom:
+          - secretRef:
+              name: api-key-secrets
+          - configMapRef:
+              name: otel-tempo-config

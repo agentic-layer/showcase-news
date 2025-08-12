@@ -1,0 +1,1 @@
+"""News RSS MCP server for feed monitoring and article storage."""
