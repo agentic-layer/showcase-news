@@ -33,11 +33,11 @@ User -->|'What's new in AI?'| NewsAgent
 User -->|'Summarize that article'| NewsAgent
 
 %% News Agent to MCP Server
-NewsAgent -->|Tool Call:\nFetch Articles| MCPServer
+NewsAgent -->|Tool Call:<br>Fetch Articles| MCPServer
 
 
 %% News Agent to Summarizer Agent
-NewsAgent -->|Agent Task:\nSummarize URL| SummarizerAgent
+NewsAgent -->|Agent Task:<br>Summarize URL| SummarizerAgent
 SummarizerAgent -->|GET| Internet[🌐 Internet]
 
 
