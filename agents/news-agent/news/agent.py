@@ -39,7 +39,7 @@ news_fetcher_toolset = MCPToolset(
 )
 
 root_agent = Agent(
-    name="host_agent",
+    name="news_agent",
     model=LiteLlm("gemini/gemini-2.0-flash"),
     description=(
         "Agent that can get the latest news articles and talk to other agents to summarize them."
