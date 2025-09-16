@@ -14,7 +14,7 @@ The Agentic Layer Demo showcases the following:
   - An agent uses an MCP tool
 - Agentic Layer components:
   - [Agentic Layer SDK](https://github.com/agentic-layer/sdk-python) (adds tracing support to Google ADK) 
-  - [Observability Dashboard](https://github.com/agentic-layer/observability-dashboard/) used to visualize agent-to-agent communication).
+  - [Observability Dashboard](https://github.com/agentic-layer/observability-dashboard/) (used to visualize agent-to-agent communication).
 
 ## Overview
 
