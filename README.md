@@ -4,7 +4,7 @@ The Agentic Layer is a collection of open-source tools and Kubernetes operators 
 
 Find out more about the Agentic Layer on our [landing page](http://agentic-layer.ai/) or our [documentation](https://docs.agentic-layer.ai/).
 
-![img.png](demo.gif)
+![img.png](demo.png)
 
 --- 
 The Agentic Layer Demo showcases the following:
@@ -57,7 +57,6 @@ class MCPServer mcpClass
 class Internet,RSSFeeds externalClass
 ```
 
-This is the flow:
 - User asks the News Agent questions like "What's new in AI?" or "Summarize that article"
 - News Agent fetches latest articles using the News MCP Server (which aggregates RSS feeds from OpenAI, AI News, VentureBeat, etc.)
 - For summarization requests, News Agent delegates to the Summarizer Agent via A2A protocol
