@@ -1,0 +1,3 @@
+= Agentic AI News Showcase
+
+image::demo.png[Agentic AI News Showcase,600,400]

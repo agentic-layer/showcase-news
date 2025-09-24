@@ -1,4 +1,4 @@
-# Agentic Layer Showcase for a News-Agent
+# Agentic AI Showcase with News Agent
 
 The Agentic Layer is a collection of open-source tools and Kubernetes operators for the operation of vendor-agnostic AI
 platforms.
