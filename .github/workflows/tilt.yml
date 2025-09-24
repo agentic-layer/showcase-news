@@ -8,6 +8,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+env:
+  # For the tilt test, we do not currently call an agent that needs a real API key.
+  GOOGLE_API_KEY: fake
+
 jobs:
   tilt:
     runs-on: ubuntu-latest
