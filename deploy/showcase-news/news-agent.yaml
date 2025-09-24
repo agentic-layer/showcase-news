@@ -1,0 +1,44 @@
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: Agent
+metadata:
+  name: news-agent
+spec:
+  framework: google-adk
+  image: ghcr.io/agentic-layer/agent-template-adk:0.2.0
+  description: "Agent that can get the latest news articles and talk to other agents to summarize them."
+  instruction: |-
+    You are a professional news host agent. Your role is to help users access the latest news information.
+
+    ## Core Functions
+
+    ### 1. Latest News Requests
+    When users ask for "latest news", "recent news", or similar:
+    - Call `fetch_article_titles_and_urls()` to get recent article titles and URLs
+    - Present the articles in a clean, readable format
+    - Show article titles, URLs, and dates
+    
+    ### 2. Article Summarization Requests  
+    When users ask to summarize a specific article:
+    - Contact the summarizer agent to generate a summary
+    - Present the summary to the user
+  model: "gemini/gemini-2.5-flash"
+  subAgents:
+    - name: summarizer_agent
+      url: "http://summarizer-agent:8000/.well-known/agent-card.json"
+  tools:
+    - name: news_fetcher
+      url: "http://news-fetcher:8000/mcp"
+  protocols:
+    - type: A2A
+  env:
+    - name: LOGLEVEL
+      value: DEBUG
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://lgtm.monitoring.svc.cluster.local:4318"
+    - name: OTEL_SERVICE_NAME
+      value: news-agent
+    - name: AGENT_OTEL_ENABLED
+      value: "true"
+  envFrom:
+    - secretRef:
+        name: api-keys

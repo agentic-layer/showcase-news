@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-fetcher
+spec:
+  selector:
+    matchLabels:
+      app: news-fetcher
+  template:
+    metadata:
+      labels:
+        app: news-fetcher
+    spec:
+      containers:
+        - name: news-fetcher
+          image: news-fetcher:latest
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-fetcher
+  labels:
+    app: news-fetcher
+spec:
+  selector:
+    app: news-fetcher
+  ports:
+    - port: 8000
