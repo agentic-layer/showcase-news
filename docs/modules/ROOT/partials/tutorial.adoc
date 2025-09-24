@@ -1,3 +1,373 @@
 = Agentic AI News Showcase
 
+This tutorial will guide you through setting up the Agentic AI News Showcase in a local Kubernetes cluster. The showcase demonstrates multi-agent AI communication using the Agentic Layer platform.
+
 image::showcase-news:ROOT:demo.png[Agentic AI News Showcase,600,400]
+
+You can find the complete source code in the https://github.com/agentic-layer/showcase-news[showcase-news repository^].
+
+== What You'll Build
+
+This showcase demonstrates multi-agent AI communication where:
+
+- **User** asks the News-Agent questions like "What's new in AI?" or "Summarize that article"
+- **News-Agent** fetches latest articles using the News MCP Server (which aggregates RSS feeds from OpenAI, AI News, VentureBeat, etc.)
+- For summarization requests, **News-Agent** delegates to the **Summarizer Agent** via A2A protocol
+- **Summarizer Agent** scrapes article content from the web and generates concise summaries
+- All agent interactions are traced and visualized through the **Observability Dashboard**
+
+[mermaid]
+----
+graph LR
+    User["👤 User"]
+    NewsAgent["📰 News Agent"]
+    SummarizerAgent["📝 Summarizer Agent"]
+    MCPServer["🔧 News MCP Server"]
+
+    User -->|'1. What's new in AI?'|NewsAgent
+    NewsAgent -->|2 . Tool Call:<br>Fetch Articles|MCPServer
+    MCPServer -->|3 . fetch|RSSFeeds["📡 RSS Feeds"]
+    User -->|'4 . Summarize the first article'|NewsAgent
+    NewsAgent -->|5 . Agent Task:<br>Summarize URL|SummarizerAgent
+    SummarizerAgent -->|6. Tool Call:<br>Fetch Articles|MCPServer
+    MCPServer -->|7 . GET|Internet["🌐 Internet"]
+
+%% Styling
+classDef userClass fill: #e1f5fe
+classDef agentClass fill: #f3e5f5
+classDef mcpClass fill: #e8f5e8
+classDef externalClass fill: #fff3e0
+
+class User userClass
+class NewsAgent agentClass
+class SummarizerAgent agentClass
+class MCPServer mcpClass
+class Internet externalClass
+class RSSFeeds externalClass
+----
+
+== Prerequisites
+
+Before starting, ensure you have the following installed and configured:
+
+=== Required Software
+* **Docker** - For containerization
+* **kubectl** - Kubernetes command-line tool
+* **Tilt** - https://tilt.dev/[Install Tilt^] for local development
+* **curl** - For downloading manifests
+
+=== Access Requirements
+* **Gemini API Key** - Get yours from https://ai.google.dev/gemini-api/docs/api-key[Google AI Studio^]
+* **Local Kubernetes Cluster** - We recommend:
+  ** Docker Desktop (with Kubernetes enabled)
+  ** Rancher Desktop (with Kubernetes enabled)
+  ** https://kind.sigs.k8s.io/[kind^]
+  ** https://k3s.io/[k3s^] or https://k3d.io/[k3d^]
+
+== Step 1: Set Up Your Environment
+
+=== Clone the Repository
+[source,bash]
+----
+git clone https://github.com/agentic-layer/showcase-news.git
+cd showcase-news
+----
+
+=== Configure Your API Key
+Set your Gemini API key as an environment variable:
+
+[source,bash]
+----
+export GOOGLE_API_KEY="your-gemini-api-key-here"
+----
+
+TIP: You can also create a `.env` file in the project root with `GOOGLE_API_KEY=your-key` to persist this setting.
+
+=== Verify Kubernetes Context
+Ensure your kubectl is pointing to your local cluster:
+
+[source,bash]
+----
+kubectl config current-context
+kubectl cluster-info
+----
+
+== Step 2: Install Components
+
+Choose between the automated Tilt approach or manual installation to understand each component:
+
+=== Option A: Automated Installation with Tilt
+
+The quickest way to get started is using Tilt, which automates the entire installation process:
+
+[source,bash]
+----
+tilt up
+----
+
+Tilt will automatically:
+* Install cert-manager for webhook certificate management
+* Install the Agentic Runtime Operator
+* Deploy the monitoring stack (LGTM)
+* Deploy the Agentic Layer observability dashboard
+* Deploy the showcase applications
+* Create required secrets from your environment variables
+* Build and deploy the news-fetcher MCP server
+* Set up port forwarding for easy access
+
+Once Tilt shows all resources as ready, skip to Step 3.
+
+=== Option B: Manual Installation (Understanding Each Component)
+
+If you want to understand what Tilt does behind the scenes, follow these manual steps:
+
+==== Install cert-manager
+
+The Agentic Runtime Operator requires cert-manager for webhook certificate management. Install it using:
+
+[source,bash]
+----
+curl -L https://github.com/cert-manager/cert-manager/releases/download/v1.13.2/cert-manager.yaml | kubectl apply -f -
+----
+
+Wait for cert-manager to be ready:
+
+[source,bash]
+----
+kubectl wait --for=condition=Ready pods --all -n cert-manager --timeout=60s
+----
+
+==== Install Agentic Runtime Operator
+
+The Agentic Runtime Operator manages AI agents as Kubernetes custom resources. Install the latest version:
+
+[source,bash]
+----
+curl -L https://github.com/agentic-layer/agent-runtime-operator/releases/download/v0.4.4/install.yaml | kubectl apply -f -
+----
+
+Wait for the operator to be available:
+
+[source,bash]
+----
+kubectl wait --for=condition=Available --timeout=60s -n agent-runtime-operator-system deployment/agent-runtime-operator-controller-manager
+----
+
+==== Apply Deployment Manifests
+
+The showcase consists of several components. Let's apply them in the correct order:
+
+*Create Monitoring Stack:*
+This deploys the LGTM (Loki, Grafana, Tempo, Mimir) observability stack:
+
+[source,bash]
+----
+kubectl apply -f deploy/lgtm.yaml
+----
+
+The monitoring stack provides:
+* **Grafana** - Dashboards and visualization (port 3000)
+* **OpenTelemetry Collector** - Trace collection (ports 4317/4318)
+* **Loki, Tempo, Prometheus** - Logs, traces, and metrics storage
+
+*Deploy Agentic Layer Components:*
+This includes the observability dashboard for visualizing agent interactions:
+
+[source,bash]
+----
+kubectl apply -k deploy/agentic-layer/
+----
+
+The observability dashboard:
+* Visualizes agent-to-agent communication in real-time
+* Provides debugging capabilities for AI workflows
+* Exposes metrics about agent performance
+
+*Create API Key Secret:*
+Before deploying the agents, create the required secret with your Gemini API key:
+
+[source,bash]
+----
+kubectl create secret generic api-keys \
+  --from-literal=GOOGLE_API_KEY="$GOOGLE_API_KEY" \
+  -n showcase-news
+----
+
+*Build and Load News Fetcher Image:*
+The news-fetcher requires building a custom Docker image before deployment:
+
+[source,bash]
+----
+# Build the Docker image
+docker build -t news-fetcher:latest ./mcp-servers/news-fetcher
+
+# Make the image available to your cluster
+# For kind clusters:
+kind load docker-image news-fetcher:latest
+
+# For k3s/k3d clusters:
+# k3d image import news-fetcher:latest
+
+# For Docker Desktop: the image is already available
+----
+
+*Deploy Showcase Applications:*
+Now deploy the main showcase components:
+
+[source,bash]
+----
+kubectl apply -k deploy/showcase-news/
+----
+
+This deploys:
+* **showcase-news namespace** - Isolated environment for the demo
+* **news-agent** - Main agent that handles user queries
+* **summarizer-agent** - Specialized agent for article summarization
+* **news-fetcher** - MCP server that aggregates RSS feeds
+
+==== Verify Deployment
+Check that all components are running:
+
+[source,bash]
+----
+kubectl get pods -n showcase-news
+kubectl get pods -n observability-dashboard
+kubectl get pods -n monitoring
+----
+
+==== Set Up Port Forwarding
+
+Access the applications through kubectl port forwarding:
+
+[source,bash]
+----
+# News Agent
+kubectl port-forward -n showcase-news service/news-agent 8001:8000 &
+
+# Summarizer Agent
+kubectl port-forward -n showcase-news service/summarizer-agent 8002:8000 &
+
+# News Fetcher
+kubectl port-forward -n showcase-news service/news-fetcher 8003:8000 &
+
+# Observability Dashboard
+kubectl port-forward -n observability-dashboard service/observability-dashboard 8100:8000 &
+
+# Grafana
+kubectl port-forward -n monitoring service/lgtm 3000:3000 &
+----
+
+NOTE: The `&` runs each command in the background. Keep the terminal open to maintain the port forwards.
+
+== Step 3: Access the Applications
+
+Once all components are running and port forwarding is set up, you can access:
+
+* **Observability Dashboard**: http://localhost:8100 - Real-time agent communication visualization
+* **Grafana**: http://localhost:3000 - System metrics and logs
+* **News-Agent API**: http://localhost:8001 - Main agent endpoint
+* **Summarizer-Agent API**: http://localhost:8002 - Summarization agent endpoint
+* **News Fetcher API**: http://localhost:8003 - MCP server for news feeds
+
+== Step 4: Test the Setup
+
+=== Basic News Query
+Test the news-agent with a simple query:
+
+[source,bash]
+----
+curl http://localhost:8001/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "message/send",
+    "params": {
+      "message": {
+        "role": "user",
+        "parts": [
+          {
+            "kind": "text",
+            "text": "Whats the latest news in AI? Summarize the top article to me."
+          }
+        ],
+        "messageId": "9229e770-767c-417b-a0b0-f0741243c579",
+        "contextId": "abcd1234-5678-90ab-cdef-1234567890a0"
+      },
+      "metadata": {}
+    }
+  }' | jq
+----
+
+=== Direct Summarization
+Test the summarizer agent directly:
+
+[source,bash]
+----
+curl http://localhost:8002/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "message/send",
+    "params": {
+      "message": {
+        "role": "user",
+        "parts": [
+          {
+            "kind": "text",
+            "text": "Please summarize this blog post: https://blog.qaware.de/posts/deepquali/"
+          }
+        ],
+        "messageId": "9229e770-767c-417b-a0b0-f0741243c579",
+        "contextId": "abcd1234-5678-90ab-cdef-1234567890ad"
+      },
+      "metadata": {}
+    }
+  }' | jq
+----
+
+== Understanding the Architecture
+
+The showcase demonstrates several key concepts:
+
+=== Agent-to-Agent Communication
+* The **News Agent** delegates summarization tasks to the **Summarizer Agent**
+* Communication uses the A2A (Agent-to-Agent) protocol
+* All interactions are traced and visualized in real-time
+
+=== MCP Integration
+* **Model Context Protocol (MCP)** servers provide tools for agents
+* The **news-fetcher** MCP server aggregates RSS feeds from multiple sources
+* Agents use MCP tools to fetch and process external data
+
+=== Observability
+* All agent interactions are instrumented with OpenTelemetry
+* Traces flow to the observability dashboard for visualization
+* The monitoring stack provides comprehensive system insights
+
+== Cleanup
+
+When you're done exploring, clean up the resources:
+
+=== If You Used Tilt
+[source,bash]
+----
+tilt down --delete-namespaces
+----
+
+=== If You Used Manual Installation
+[source,bash]
+----
+# Stop port forwarding (Ctrl+C or kill background jobs)
+jobs
+kill %1 %2 %3 %4 %5  # Adjust numbers based on your running jobs
+
+# Delete deployed resources
+kubectl delete -k deploy/
+kubectl delete -f https://github.com/agentic-layer/agent-runtime-operator/releases/download/v0.4.4/install.yaml
+kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.2/cert-manager.yaml
+
+# Remove the built Docker image (optional)
+docker rmi news-fetcher:latest
+----
