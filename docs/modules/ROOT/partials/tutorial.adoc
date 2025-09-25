@@ -16,7 +16,7 @@ This showcase demonstrates multi-agent AI communication where:
 - **Summarizer Agent** scrapes article content from the web and generates concise summaries
 - All agent interactions are traced and visualized through the **Observability Dashboard**
 
-[mermaid]
+[mermaid, showcase-sequence, format="svg", link="self", window="_blank"]
 ----
 graph LR
     User["👤 User"]
