@@ -106,6 +106,7 @@ tilt up
 ----
 
 Tilt will automatically:
+
 * Install cert-manager for webhook certificate management
 * Install the Agentic Runtime Operator
 * Deploy the monitoring stack (LGTM)
@@ -166,6 +167,7 @@ kubectl apply -f deploy/lgtm.yaml
 ----
 
 The monitoring stack provides:
+
 * **Grafana** - Dashboards and visualization (port 3000)
 * **OpenTelemetry Collector** - Trace collection (ports 4317/4318)
 * **Loki, Tempo, Prometheus** - Logs, traces, and metrics storage
@@ -179,6 +181,7 @@ kubectl apply -k deploy/agentic-layer/
 ----
 
 The observability dashboard:
+
 * Visualizes agent-to-agent communication in real-time
 * Provides debugging capabilities for AI workflows
 * Exposes metrics about agent performance
@@ -220,6 +223,7 @@ kubectl apply -k deploy/showcase-news/
 ----
 
 This deploys:
+
 * **showcase-news namespace** - Isolated environment for the demo
 * **news-agent** - Main agent that handles user queries
 * **summarizer-agent** - Specialized agent for article summarization
