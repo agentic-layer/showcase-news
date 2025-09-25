@@ -37,7 +37,7 @@ spec:
     spec:
       containers:
         - name: observability-dashboard
-          image: eu.gcr.io/agentic-layer/observability-dashboard:main-754d3c9-1756988386
+          image: ghcr.io/agentic-layer/observability-dashboard:0.2
           ports:
             - containerPort: 8000
           readinessProbe:
