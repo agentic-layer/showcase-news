@@ -45,8 +45,8 @@ k8s_kind(
 k8s_yaml(kustomize('deploy'))
 
 
-k8s_resource('news-agent', port_forwards='8001:8000', labels=['workforce'])
-k8s_resource('summarizer-agent', port_forwards='8002:8000', labels=['workforce'])
+k8s_resource('news-agent', port_forwards='8001:8000', labels=['workforce'], resource_deps=['news-fetcher', 'summarizer-agent'])
+k8s_resource('summarizer-agent', port_forwards='8002:8000', labels=['workforce'], resource_deps=['news-fetcher'])
 
 docker_build('news-fetcher', context='./mcp-servers/news-fetcher', dockerfile='./mcp-servers/news-fetcher/Dockerfile')
 k8s_resource('news-fetcher', port_forwards='8003:8000', labels=['workforce'])

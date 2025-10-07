@@ -3,6 +3,8 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 from fastmcp import FastMCP
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from .rss_processor import RSSProcessor
 
@@ -118,6 +120,12 @@ def extract_article_content(article_url: str) -> str:
     except Exception as e:
         logger.error(f"Error extracting content from {article_url}: {e}")
         return f"Could not extract content from the article URL: {str(e)}"
+
+@mcp.custom_route("/health", methods=["GET"])
+async def health_check(_: Request) -> JSONResponse:
+    """Health check endpoint."""
+    return JSONResponse({"status": "healthy"})
+
 
 
 def main():
