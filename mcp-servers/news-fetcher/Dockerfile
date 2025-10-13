@@ -1,7 +1,7 @@
 FROM python:3.13-slim-trixie
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:0.8 /uv /bin/uv
+COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /bin/uv
 WORKDIR /app
 
 # Copy the project files
