@@ -108,7 +108,7 @@ tilt up
 Tilt will automatically:
 
 * Install cert-manager for webhook certificate management
-* Install the Agentic Runtime Operator
+* Install the Agent Runtime Operator
 * Deploy the monitoring stack (LGTM)
 * Deploy the Agentic Layer observability dashboard
 * Deploy the showcase applications
@@ -124,7 +124,7 @@ If you want to understand what Tilt does behind the scenes, follow these manual 
 
 ==== Install cert-manager
 
-The Agentic Runtime Operator requires cert-manager for webhook certificate management. Install it using:
+The Agent Runtime Operator requires cert-manager for webhook certificate management. Install it using:
 
 [source,bash]
 ----
@@ -138,9 +138,9 @@ Wait for cert-manager to be ready:
 kubectl wait --for=condition=Ready pods --all -n cert-manager --timeout=60s
 ----
 
-==== Install Agentic Runtime Operator
+==== Install Agent Runtime Operator
 
-The Agentic Runtime Operator manages AI agents and MCP servers as Kubernetes custom resources. Install the latest version:
+The Agent Runtime Operator manages AI agents and MCP servers as Kubernetes custom resources. Install the latest version:
 
 [source,bash]
 ----
