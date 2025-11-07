@@ -1,0 +1,58 @@
+#
+# GitHub Action: Push
+#
+# This workflow automates the building and publishing of the MCP server
+# Docker image to Google Cloud Artifact Registry when code is pushed to
+# the main branch.
+#
+name: Push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  publish-mcp-server:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v5'
+        with:
+          fetch-depth: 0 # required to fetch all history for all branches and tags
+
+      - name: 'Generate Image Tag'
+        id: 'tag'
+        run: |
+          # Generate branch-sha-timestamp format
+          GIT_BRANCH="${{ github.ref_name }}"
+          GIT_SHA="${{ github.sha }}"
+          IMAGE_TAG="${GIT_BRANCH}-${GIT_SHA:0:7}-$(date +%s)"
+          echo "tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "Generated Tag: $IMAGE_TAG"
+
+      - name: 'Build Docker Image'
+        uses: 'docker/build-push-action@v6'
+        with:
+          context: mcp-servers/news-fetcher/
+          file: mcp-servers/news-fetcher/Dockerfile
+          push: false
+          load: true   # Load image into local Docker daemon for pushing
+          tags: europe-docker.pkg.dev/agentic-layer/eu.gcr.io/news-fetcher:${{ steps.tag.outputs.tag }}
+
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v3'
+        with:
+          project_id: 'agentic-layer'
+          workload_identity_provider: 'projects/363137235362/locations/global/workloadIdentityPools/github-actions-identity-pool/providers/github-actions-provider'
+          service_account: 'sa-github-actions@agentic-layer.iam.gserviceaccount.com'
+
+      - name: 'Configure Docker for Artifact Registry'
+        run: gcloud auth configure-docker europe-docker.pkg.dev
+
+      - name: 'Push Docker Image'
+        run: docker push europe-docker.pkg.dev/agentic-layer/eu.gcr.io/news-fetcher:${{ steps.tag.outputs.tag }}
