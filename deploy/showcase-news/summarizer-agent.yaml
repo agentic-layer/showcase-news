@@ -35,7 +35,8 @@ spec:
   model: "gemini/gemini-2.5-flash"
   tools:
     - name: news_fetcher
-      url: "http://news-fetcher:8000/mcp"
+      toolServerRef:
+        name: news-fetcher
   protocols:
     - type: A2A
   env:

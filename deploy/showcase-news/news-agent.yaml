@@ -24,10 +24,12 @@ spec:
   model: "gemini/gemini-2.5-flash"
   subAgents:
     - name: summarizer_agent
-      url: "http://summarizer-agent:8000/.well-known/agent-card.json"
+      agentRef:
+        name: summarizer-agent
   tools:
     - name: news_fetcher
-      url: "http://news-fetcher:8000/mcp"
+      toolServerRef:
+        name: news-fetcher
   protocols:
     - type: A2A
   env:
