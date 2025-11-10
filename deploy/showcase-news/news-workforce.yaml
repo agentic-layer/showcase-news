@@ -2,8 +2,9 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: AgenticWorkforce
 metadata:
   labels:
-    app.kubernetes.io/name: agent-runtime-operator
-    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: news-workforce
+    app.kubernetes.io/component: workforce
+    app.kubernetes.io/part-of: showcase-news
   name: news-workforce
 spec:
   # Human-readable name for the workforce
