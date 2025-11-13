@@ -10,11 +10,13 @@ You can find the complete source code in the https://github.com/agentic-layer/sh
 
 This showcase demonstrates multi-agent AI communication where:
 
-- **User** asks the News-Agent questions like "What's new in AI?" or "Summarize that article"
-- **News-Agent** fetches latest articles using the News MCP Server (which aggregates RSS feeds from OpenAI, AI News, VentureBeat, etc.)
+- The **User** asks the News-Agent questions like "What's new in AI?" or "Summarize that article"
+- The **Agent Gateway** serves an abstraction layer between external queries and agents.
+- The **News-Agent** fetches latest articles using the News MCP Server (which aggregates RSS feeds from OpenAI, AI News, VentureBeat, etc.)
 - For summarization requests, **News-Agent** delegates to the **Summarizer Agent** via A2A protocol
-- **Summarizer Agent** scrapes article content from the web and generates concise summaries
+- The **Summarizer Agent** scrapes article content from the web and generates concise summaries
 - All agent interactions are traced and visualized through the **Observability Dashboard**
+- All LLM calls pass through the **AI Gateway**.
 
 [mermaid, showcase-sequence, format="svg", link="self", window="_blank"]
 ----
@@ -108,7 +110,7 @@ tilt up
 Tilt will automatically:
 
 * Install cert-manager for webhook certificate management
-* Install the Agent Runtime Operator
+* Install the Agentic Runtime Operator, Agent Gateway Operator, and AI Gateway Operator
 * Deploy the monitoring stack (LGTM)
 * Deploy the Agentic Layer observability dashboard
 * Deploy the showcase applications
@@ -153,6 +155,65 @@ Wait for the operator to be available:
 ----
 kubectl wait --for=condition=Available --timeout=60s -n agent-runtime-operator-system deployment/agent-runtime-operator-controller-manager
 ----
+
+==== Install the Agent Gateway Operator
+
+This operator manages AgentGateway resources and automatically generates KrakenD configurations to expose Agent workloads through a unified gateway interface.
+
+See the xref:agent-runtime-operator:agent-runtime:how-to-guide.adoc[installation instructions]
+
+==== Install an Agent Gateway instance
+
+Configure an `AgentGateway` instance: xref:ai-gateway-litellm-operator:gateway:how-to-guide.adoc[see example].
+
+==== Install AI Gateway Operator
+
+This operator managed AiGateway resources and manages LiteLLM deployments. It serves as an abstraction layer for LLM provider interactions, providing unified access, security, and intelligent routing.
+
+// TODO: Replace instructions with reference after PAAL-195 is done
+//See the xref:ai-gateway-operator:operator:how-to-guide.adoc[installation instructions]
+
+[source,bash]
+----
+kubectl apply -f https://github.com/agentic-layer/ai-gateway-litellm-operator/releases/download/v0.2.0/install.yaml
+----
+
+Wait for the operator to be available:
+
+[source,bash]
+----
+kubectl wait --for=condition=Available --timeout=60s -n agent-runtime-operator-system deployment/agent-runtime-operator-controller-manager
+----
+
+
+==== Install AI Gateway Operator instance
+
+// TODO: Replace instructions with reference after PAAL-195 is done
+//Configure an `AiGateway` instance: xref:ai-gateway-litellm-operator:gateway:how-to-guide.adoc[see example].
+
+Configure an instance of an `AiGateway`:
+
+```yaml
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai-gateway
+---
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: AiGateway
+metadata:
+    name: ai-gateway-litellm
+    namespace: ai-gateway
+spec:
+  aiGatewayClassName: litellm
+  aiModels:
+    - name: gemini-2.5-flash-lite
+      provider: gemini
+    - name: gemini-2.0-flash
+      provider: gemini
+EOF
+```
 
 ==== Apply Deployment Manifests
 
