@@ -7,6 +7,15 @@ load('ext://secret', 'secret_from_dict')
 load('ext://dotenv', 'dotenv')
 dotenv()
 
+v1alpha1.extension_repo(name='agentic-layer', url='https://github.com/agentic-layer/tilt-extensions', ref='v0.3.2')
+
+v1alpha1.extension(name='cert-manager', repo_name='agentic-layer', repo_path='cert-manager')
+load('ext://cert-manager', 'cert_manager_install')
+cert_manager_install()
+
+v1alpha1.extension(name='agent-runtime', repo_name='agentic-layer', repo_path='agent-runtime')
+load('ext://agent-runtime', 'agent_runtime_install')
+agent_runtime_install(version='0.10.0')
 google_api_key = os.environ.get('GOOGLE_API_KEY', '')
 if not google_api_key:
     fail('GOOGLE_API_KEY environment variable is required. Please set it in your shell or .env file.')
@@ -16,19 +25,6 @@ k8s_yaml(secret_from_dict(
     namespace = "showcase-news",
     inputs = { "GOOGLE_API_KEY": google_api_key }
 ))
-
-# Cert manager is required for Agent Runtime Operator to support webhooks
-load('ext://cert_manager', 'deploy_cert_manager')
-deploy_cert_manager()
-
-def deploy_agent_runtime_operator():
-    print("Installing agent-runtime-operator")
-    local("kubectl apply -f https://github.com/agentic-layer/agent-runtime-operator/releases/download/v0.10.0/install.yaml")
-
-    print("Waiting for agent-runtime-operator to start")
-    local("kubectl wait --for=condition=Available --timeout=60s -n agent-runtime-operator-system deployment/agent-runtime-operator-controller-manager")
-
-deploy_agent_runtime_operator()
 
 # Configure Tilt to work with Agent Runtime Operator's custom Agent CRDs
 # Without these configurations, Tilt cannot properly manage Agent resources created by the operator:
