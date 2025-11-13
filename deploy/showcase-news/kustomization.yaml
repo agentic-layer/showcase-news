@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: showcase-news
 resources:
   - namespace.yaml
+  - news-workforce.yaml
   - news-fetcher.yaml
   - summarizer-agent.yaml
   - news-agent.yaml

@@ -1,0 +1,25 @@
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: AgenticWorkforce
+metadata:
+  name: news-workforce
+spec:
+  # Human-readable name for the workforce
+  name: "News workforce"
+
+  # Description of the workforce's purpose and capabilities
+  description: "A sophisticated multi-agent system for fetching and summarizing news."
+
+  # Owner of the workforce (email or identifier)
+  owner: "user-name@example.com"
+
+  # Optional tags for categorization and organization
+  tags:
+    - news
+    - news fetching
+    - news summarizing
+
+  # Entry point agents - these are the initial agents users interact with
+  # References to existing Agent resources in the cluster
+  entryPointAgents:
+    - name: news-agent
+      namespace: showcase-news

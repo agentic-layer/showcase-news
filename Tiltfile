@@ -51,6 +51,7 @@ k8s_kind(
 k8s_yaml(kustomize('deploy'))
 
 
+k8s_resource('news-workforce', resource_deps=['agent-runtime'], pod_readiness='ignore')
 k8s_resource('news-agent', port_forwards='8001:8000', labels=['workforce'], resource_deps=['news-fetcher', 'summarizer-agent'])
 k8s_resource('summarizer-agent', port_forwards='8002:8000', labels=['workforce'], resource_deps=['news-fetcher'])
 
