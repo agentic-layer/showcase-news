@@ -110,7 +110,7 @@ tilt up
 Tilt will automatically:
 
 * Install cert-manager for webhook certificate management
-* Install the Agentic Runtime Operator, Agent Gateway Operator, and AI Gateway Operator
+* Install the Agent Runtime Operator, Agent Gateway Operator, and AI Gateway Operator
 * Deploy the monitoring stack (LGTM)
 * Deploy the Agentic Layer observability dashboard
 * Deploy the showcase applications
