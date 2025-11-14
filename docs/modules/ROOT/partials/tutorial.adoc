@@ -153,11 +153,11 @@ See the xref:agent-runtime-operator:agent-runtime:how-to-guide.adoc[agent-runtim
 
 This operator manages AgentGateway resources and automatically generates KrakenD configurations to expose Agent workloads through a unified gateway interface.
 
-See the xref:agent-gateway-operator:operator:how-to-guide.adoc[agent-gateway-operator] installation instructions.
+See the xref:agent-runtime-operator:agent-gateways:how-to-guide.adoc[agent-gateway-operator] installation instructions.
 
 ===== Install an Agent Gateway instance
 
-Configure an `AgentGateway` instance: xref:agent-gateway-operator:gateway:how-to-guide.adoc[see example].
+Configure an `AgentGateway` instance: xref:agent-runtime-operator:agent-gateways:how-to-guide.adoc[see example].
 
 ==== AI Gateway
 
