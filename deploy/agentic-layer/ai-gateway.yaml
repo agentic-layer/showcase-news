@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai-gateway
+---
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: AiGateway
+metadata:
+  name: ai-gateway-litellm
+  namespace: ai-gateway
+spec:
+  aiGatewayClassName: litellm
+  aiModels:
+    - name: gemini-2.5-flash-lite
+      provider: gemini
+    - name: gemini-2.0-flash
+      provider: gemini
