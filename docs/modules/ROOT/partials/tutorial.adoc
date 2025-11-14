@@ -111,9 +111,10 @@ Tilt will automatically:
 
 * Install cert-manager for webhook certificate management
 * Install the Agent Runtime Operator, Agent Gateway Operator, and AI Gateway Operator
+* Deploy an instance of an Agent Gateway and an AI Gateway
+* Deploy the showcase applications (Agents and ToolServer)
 * Deploy the monitoring stack (LGTM)
 * Deploy the Agentic Layer observability dashboard
-* Deploy the showcase applications
 * Create required secrets from your environment variables
 * Build and deploy the news-fetcher MCP server
 * Set up port forwarding for easy access
@@ -142,78 +143,35 @@ kubectl wait --for=condition=Ready pods --all -n cert-manager --timeout=60s
 
 ==== Install Agent Runtime Operator
 
-The Agent Runtime Operator manages AI agents and MCP servers as Kubernetes custom resources. Install the latest version:
+The Agent Runtime Operator manages AI `Agents` and MCP `ToolServers` as Kubernetes custom resources.
 
-[source,bash]
-----
-curl -L https://github.com/agentic-layer/agent-runtime-operator/releases/download/v0.7.0/install.yaml | kubectl apply -f -
-----
+See the xref:agent-runtime-operator:agent-runtime:how-to-guide.adoc[agent-runtime-operator] installation instructions.
 
-Wait for the operator to be available:
+==== Agent Gateway
 
-[source,bash]
-----
-kubectl wait --for=condition=Available --timeout=60s -n agent-runtime-operator-system deployment/agent-runtime-operator-controller-manager
-----
-
-==== Install the Agent Gateway Operator
+===== Install the Agent Gateway Operator
 
 This operator manages AgentGateway resources and automatically generates KrakenD configurations to expose Agent workloads through a unified gateway interface.
 
-See the xref:agent-runtime-operator:agent-runtime:how-to-guide.adoc[installation instructions]
+See the xref:agent-gateway-operator:operator:how-to-guide.adoc[agent-gateway-operator] installation instructions.
 
-==== Install an Agent Gateway instance
+===== Install an Agent Gateway instance
 
-Configure an `AgentGateway` instance: xref:ai-gateway-litellm-operator:gateway:how-to-guide.adoc[see example].
+Configure an `AgentGateway` instance: xref:agent-gateway-operator:gateway:how-to-guide.adoc[see example].
 
-==== Install AI Gateway Operator
+==== AI Gateway
 
-This operator managed AiGateway resources and manages LiteLLM deployments. It serves as an abstraction layer for LLM provider interactions, providing unified access, security, and intelligent routing.
+===== Install AI Gateway Operator
 
-// TODO: Replace instructions with reference after PAAL-195 is done
-//See the xref:ai-gateway-operator:operator:how-to-guide.adoc[installation instructions]
+This operator manages AiGateway resources and manages LiteLLM deployments. It serves as an abstraction layer for LLM provider interactions, providing unified access, security, and intelligent routing.
 
-[source,bash]
-----
-kubectl apply -f https://github.com/agentic-layer/ai-gateway-litellm-operator/releases/download/v0.2.0/install.yaml
-----
-
-Wait for the operator to be available:
-
-[source,bash]
-----
-kubectl wait --for=condition=Available --timeout=60s -n agent-runtime-operator-system deployment/agent-runtime-operator-controller-manager
-----
+See the xref:ai-gateway-litellm-operator:operator:how-to-guide.adoc[ai-gateway-litellm-operator] installation instructions.
 
 
-==== Install AI Gateway Operator instance
+===== Install AI Gateway Operator instance
 
-// TODO: Replace instructions with reference after PAAL-195 is done
-//Configure an `AiGateway` instance: xref:ai-gateway-litellm-operator:gateway:how-to-guide.adoc[see example].
+Configure an `AiGateway` instance: xref:ai-gateway-litellm-operator:gateway:how-to-guide.adoc[see example].
 
-Configure an instance of an `AiGateway`:
-
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ai-gateway
----
-apiVersion: runtime.agentic-layer.ai/v1alpha1
-kind: AiGateway
-metadata:
-    name: ai-gateway-litellm
-    namespace: ai-gateway
-spec:
-  aiGatewayClassName: litellm
-  aiModels:
-    - name: gemini-2.5-flash-lite
-      provider: gemini
-    - name: gemini-2.0-flash
-      provider: gemini
-EOF
-```
 
 ==== Apply Deployment Manifests
 
@@ -336,8 +294,31 @@ Once all components are running and port forwarding is set up, you can access:
 
 == Step 4: Test the Setup
 
-=== Basic News Query
-Test the news-agent with a simple query:
+There are two different ways to talk to our agents:
+- Via the agent gateway (recommended).
+- Directly via the A2A protocol.
+
+=== Via the Agent Gateway
+
+This variant has the advantage of exposing the agents via an (almost-) OpenAI compatible API.
+
+[source,bash]
+----
+curl http://localhost:8004/news-agent/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "news-agent",
+    "messages": [
+      {
+        "role": "user",
+        "content": "What are the latest AI news? Summarize the top article."
+      }
+    ]
+  }' | jq
+----
+
+=== Directly via A2A
+You can query the news-agent directly with a simple A2A query. This connection is only possible because we directly expose the agent.
 
 [source,bash]
 ----
@@ -364,8 +345,7 @@ curl http://localhost:8001/ \
   }' | jq
 ----
 
-=== Direct Summarization
-Test the summarizer agent directly:
+Or, test the summarizer agent directly:
 
 [source,bash]
 ----
