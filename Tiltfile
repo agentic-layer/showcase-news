@@ -59,7 +59,6 @@ k8s_yaml(kustomize('deploy'))
 
 # Expose services
 k8s_resource('lgtm', port_forwards=['3000:3000'])
-#k8s_resource('observability-dashboard', port_forwards=['12004:8000'])
 
 k8s_resource('news-workforce', resource_deps=['agent-runtime'], pod_readiness='ignore')
 k8s_resource('news-agent', port_forwards='8001:8000', labels=['workforce'], resource_deps=['news-fetcher', 'summarizer-agent'])
@@ -68,8 +67,9 @@ k8s_resource('summarizer-agent', port_forwards='8002:8000', labels=['workforce']
 docker_build('news-fetcher', context='./mcp-servers/news-fetcher', dockerfile='./mcp-servers/news-fetcher/Dockerfile')
 k8s_resource('news-fetcher', port_forwards='8003:8000', labels=['workforce'], resource_deps=['agent-runtime'])
 
-# Expose AL Agent Gateway
-k8s_resource('agent-gateway-krakend', port_forwards='8004:8000', labels=['agentic-layer'], resource_deps=['agent-runtime', 'news-agent'])
+k8s_resource('agent-gateway-krakend', port_forwards='8004:8080', labels=['agentic-layer'], resource_deps=['agent-runtime', 'news-agent'])
 
-# Expose the AL Observability Dashboard
+# Expose the Monitoring stack (Grafana)
+k8s_resource('lgtm', port_forwards=['3000:3000', '4318:4318', '4317:4317'], labels=['monitoring'])
+
 k8s_resource('observability-dashboard', port_forwards='8100:8000', labels=['agentic-layer'])
