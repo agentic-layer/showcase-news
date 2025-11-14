@@ -1,0 +1,46 @@
+name: Tilt Integration Test
+
+on:
+  push:
+    branches:
+      - main
+      - 'renovate/**'
+  pull_request:
+  workflow_dispatch:
+
+env:
+  # Required environment variables for the test
+  GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+
+jobs:
+  tilt-integration-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5
+
+    - name: Install k3d
+      run: |
+        curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+        k3d version
+
+    - name: Install Tilt
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/tilt-dev/tilt/master/scripts/install.sh | bash
+        tilt version
+
+    - name: Create k3d cluster
+      run: |
+        k3d cluster create local-paal \
+          --registry-create local-paal-registry:5000 \
+          --port "8080:80@loadbalancer" \
+          --port "8443:443@loadbalancer" \
+          --k3s-arg "--disable=traefik@server:0"
+
+        # Wait for cluster to be ready
+        kubectl wait --for=condition=Ready nodes --all --timeout=30s
+
+    - name: Run Tilt CI
+      run: tilt ci
