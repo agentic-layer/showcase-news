@@ -2,6 +2,7 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: AgenticWorkforce
 metadata:
   name: news-workforce
+  namespace: showcase-news
 spec:
   # Human-readable name for the workforce
   name: "News workforce"
