@@ -1,4 +1,4 @@
-name: Tilt Integration Test
+name: E2E Tests
 
 on:
   push:
