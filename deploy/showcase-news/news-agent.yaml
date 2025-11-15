@@ -36,9 +36,11 @@ spec:
   env:
     - name: LOGLEVEL
       value: DEBUG
-    - name: OTEL_EXPORTER_OTLP_ENDPOINT
-      value: "http://lgtm.monitoring.svc.cluster.local:4318"
     - name: OTEL_SERVICE_NAME
       value: news-agent
     - name: AGENT_OTEL_ENABLED
       value: "true"
+  envFrom:
+    - configMapRef:
+        name: otel-tempo-config
+        optional: true
