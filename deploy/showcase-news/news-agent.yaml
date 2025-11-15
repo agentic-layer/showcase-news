@@ -42,8 +42,3 @@ spec:
       value: news-agent
     - name: AGENT_OTEL_ENABLED
       value: "true"
-    - name: LITELLM_PROXY_API_BASE
-      value: "http://ai-gateway-litellm.ai-gateway.svc.cluster.local:4000"
-  envFrom:
-    - secretRef:
-        name: api-keys
