@@ -31,3 +31,8 @@ jobs:
 
       - name: Run Tilt CI
         run: tilt ci
+
+      - name: Verify Deployment
+        run: |
+          kubectl port-forward service/agent-gateway-krakend -n agent-gateway-krakend 10000:10000 &
+          curl --retry 5 --retry-connrefused -vf http://localhost:10000/news-agent/.well-known/agent-card.json
