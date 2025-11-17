@@ -13,5 +13,5 @@ spec:
   aiModels:
     - name: gemini-2.5-flash-lite
       provider: gemini
-    - name: gemini-2.0-flash
+    - name: gemini-2.5-flash
       provider: gemini
