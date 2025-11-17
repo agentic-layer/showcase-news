@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: librechat-config
+data:
+  librechat.yaml: |
+    version: 1.0.8
+
+    cache: true
+
+    endpoints:
+      custom:
+        - name: "AI Gateway"
+          apiKey: "not-needed"
+          baseURL: "http://ai-gateway-litellm.ai-gateway:4000"
+          models:
+            default: [ "gemini/gemini-2.5-flash-lite" ]
+            fetch: true
+          titleConvo: true
+          titleModel: "gemini/gemini-2.5-flash-lite"
+          summarize: false
+          summaryModel: "gemini/gemini-2.5-flash-lite"
+          forcePrompt: false
+          modelDisplayLabel: "Agentic Layer AI Gateway"
+          
+        - name: "Agent Gateway - news-agent"
+          apiKey: "not-needed"
+          baseURL: "http://agent-gateway-krakend.agent-gateway-krakend:10000/news-agent"
+          models:
+            default: [ "news-agent" ]
+            fetch: false
+          titleConvo: false
+          summarize: false
+          forcePrompt: false
+          addParams:
+            # Agent Gateway does not support streaming yet
+            disableStreaming: true

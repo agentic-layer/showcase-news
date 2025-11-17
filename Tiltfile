@@ -22,6 +22,14 @@ v1alpha1.extension(name='agent-gateway-krakend', repo_name='agentic-layer', repo
 load('ext://agent-gateway-krakend', 'agent_gateway_krakend_install')
 agent_gateway_krakend_install(version='0.2.0')
 
+load('ext://helm_remote', 'helm_remote')
+helm_remote(
+    'librechat',
+    repo_url='oci://ghcr.io/danny-avila/librechat-chart',
+    namespace='librechat',
+    values='./deploy/librechat/values.yaml',
+)
+
 # Docker builds
 docker_build('news-fetcher', context='./mcp-servers/news-fetcher')
 
@@ -38,6 +46,11 @@ k8s_resource('news-fetcher', labels=['showcase'], resource_deps=['agent-runtime'
 k8s_resource('ai-gateway-litellm', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards=['8101:4000'])
 k8s_resource('agent-gateway-krakend', labels=['agentic-layer'], resource_deps=['agent-runtime', 'news-agent'], port_forwards='8004:8080')
 k8s_resource('observability-dashboard', labels=['agentic-layer'], port_forwards='8100:8000')
+
+# LibreChat Components
+k8s_resource('librechat-librechat', labels=['librechat'], port_forwards=['8101:3080'])
+k8s_resource('librechat-mongodb', labels=['librechat'])
+k8s_resource('librechat-meilisearch', labels=['librechat'])
 
 # Monitoring
 k8s_resource('lgtm', labels=['monitoring'], resource_deps=[], port_forwards=['3000:3000'])

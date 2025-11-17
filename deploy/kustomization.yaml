@@ -5,3 +5,4 @@ resources:
   - otel-tempo-config.yaml
   - agentic-layer/
   - showcase-news/
+  - librechat/
