@@ -43,7 +43,7 @@ k8s_resource('summarizer-agent', labels=['showcase'], resource_deps=['agent-runt
 k8s_resource('news-fetcher', labels=['showcase'], resource_deps=['agent-runtime'], port_forwards='8003:8000')
 
 # Agentic Layer Components
-k8s_resource('ai-gateway-litellm', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards=['8101:4000'])
+k8s_resource('ai-gateway-litellm', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards=['8005:4000'])
 k8s_resource('agent-gateway-krakend', labels=['agentic-layer'], resource_deps=['agent-runtime', 'news-agent'], port_forwards='8004:8080')
 k8s_resource('observability-dashboard', labels=['agentic-layer'], port_forwards='8100:8000')
 

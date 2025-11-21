@@ -289,11 +289,14 @@ NOTE: The `&` runs each command in the background. Keep the terminal open to mai
 
 Once all components are running and port forwarding is set up, you can access:
 
+* **LibreChat UI**: http://localhost:8101 - Chat interface for agents
 * **Observability Dashboard**: http://localhost:8100 - Real-time agent communication visualization
 * **Grafana**: http://localhost:3000 - System metrics and logs
 * **News-Agent API**: http://localhost:8001 - Main agent endpoint
 * **Summarizer-Agent API**: http://localhost:8002 - Summarization agent endpoint
 * **News Fetcher API**: http://localhost:8003 - MCP server for news feeds
+* **Agent Gateway API**: http://localhost:8004 - Gateway for agents
+* **AI Gateway API**: http://localhost:8005 - Gateway for AI models
 
 == Step 4: Test the Setup
 
