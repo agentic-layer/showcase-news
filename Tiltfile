@@ -20,7 +20,7 @@ ai_gateway_litellm_install(version='0.2.0', instance=False)
 
 v1alpha1.extension(name='agent-gateway-krakend', repo_name='agentic-layer', repo_path='agent-gateway-krakend')
 load('ext://agent-gateway-krakend', 'agent_gateway_krakend_install')
-agent_gateway_krakend_install(version='0.2.0')
+agent_gateway_krakend_install(version='0.2.1')
 
 load('ext://helm_remote', 'helm_remote')
 helm_remote(
