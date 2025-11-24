@@ -274,7 +274,7 @@ kubectl port-forward -n showcase-news service/summarizer-agent 8002:8000 &
 kubectl port-forward -n showcase-news service/news-fetcher 8003:8000 &
 
 # Agent Gateway
-kubectl port-forward -n showcase-news service/my-agent-gateway 8004:10000 &
+kubectl port-forward -n showcase-news service/my-agent-gateway 8004:8080 &
 
 # Observability Dashboard
 kubectl port-forward -n observability-dashboard service/observability-dashboard 8100:8000 &
