@@ -157,7 +157,7 @@ See the xref:agent-gateway-krakend-operator:operator:how-to-guide.adoc[agent-gat
 
 ===== Install an Agent Gateway instance
 
-Configure an `AgentGateway` instance: xref:agent-gateway-krakend-operator:gateway:how-to-guide.adoc[see example].
+Configure an `AgentGateway` instance: xref:agent-runtime-operator:agent-gateways:how-to-guide.adoc[see example].
 
 ==== AI Gateway
 
@@ -170,7 +170,7 @@ See the xref:ai-gateway-litellm-operator:operator:how-to-guide.adoc[ai-gateway-l
 
 ===== Install AI Gateway Operator instance
 
-Configure an `AiGateway` instance: xref:ai-gateway-litellm-operator:gateway:how-to-guide.adoc[see example].
+Configure an `AiGateway` instance: xref:agent-runtime-operator:ai-gateways:how-to-guide.adoc[see example].
 
 
 ==== Apply Deployment Manifests
