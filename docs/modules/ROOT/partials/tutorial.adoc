@@ -110,9 +110,10 @@ tilt up
 Tilt will automatically:
 
 * Install cert-manager for webhook certificate management
-* Install the Agent Runtime Operator, Agent Gateway Operator, and AI Gateway Operator
-* Deploy an instance of an Agent Gateway and an AI Gateway
+* Install the Agent Runtime Operator
+* Install example implementations of an Agent Gateway Operator and AI Gateway Operator
 * Deploy the showcase applications (Agents and ToolServer)
+* Deploy an instance of an Agent Gateway and an AI Gateway
 * Deploy the monitoring stack (LGTM)
 * Deploy the Agentic Layer observability dashboard
 * Create required secrets from your environment variables
@@ -149,28 +150,29 @@ See the xref:agent-runtime-operator:agent-runtime:how-to-guide.adoc[agent-runtim
 
 ==== Agent Gateway
 
-===== Install the Agent Gateway Operator
+An AgentGateway exposes Agent workloads through a unified gateway interface.
+Kubernetes operators that instantiate an AgentGateway do so by watching `AgentGateway` resources and automatically deploying some kind of gateway application.
 
-This operator manages AgentGateway resources and automatically generates KrakenD configurations to expose Agent workloads through a unified gateway interface.
+The Agentic Layer team has developed an example implementation of the AgentGateway specification based on KrakenD, namely the "Agent Gateway KrakenD Operator".
 
-See the xref:agent-gateway-krakend-operator:operator:how-to-guide.adoc[agent-gateway-operator] installation instructions.
+To instantiate an AgentGateway:
 
-===== Install an Agent Gateway instance
+1. Install an operator, e.g. the xref:agent-gateway-krakend-operator:operator:how-to-guide.adoc[agent-gateway-krakend-operator].
 
-Configure an `AgentGateway` instance: xref:agent-runtime-operator:agent-gateways:how-to-guide.adoc[see example].
+2. Apply an `AgentGateway` using `kubectl apply` (see xref:agent-runtime-operator:agent-gateways:how-to-guide.adoc[instructions]).
 
 ==== AI Gateway
 
-===== Install AI Gateway Operator
+An AI Gateway serves as an abstraction layer for LLM provider interactions, providing unified access, security, and intelligent routing.
 
-This operator manages AiGateway resources and manages LiteLLM deployments. It serves as an abstraction layer for LLM provider interactions, providing unified access, security, and intelligent routing.
+Kubernetes operators that instantiate an AI gateway do so by watching `AiGateway` resources and then deploying and configuring some kind of LLM proxy.
 
-See the xref:ai-gateway-litellm-operator:operator:how-to-guide.adoc[ai-gateway-litellm-operator] installation instructions.
+One example implementation of the AiGateway specification, maintained by the Agentic Layer team, is based on LiteLLM.
 
+To instantiate an AIGateway:
 
-===== Install AI Gateway Operator instance
-
-Configure an `AiGateway` instance: xref:agent-runtime-operator:ai-gateways:how-to-guide.adoc[see example].
+1. Install an operator, e.g. the xref:ai-gateway-litellm-operator:operator:how-to-guide.adoc[ai-gateway-litellm-operator].
+2. Apply an `AiGateway` instance using `kubectl apply` (see xref:agent-runtime-operator:ai-gateways:how-to-guide.adoc[instructions].
 
 
 ==== Apply Deployment Manifests
