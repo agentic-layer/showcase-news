@@ -4,7 +4,6 @@ metadata:
   name: news-agent
 spec:
   framework: google-adk
-  image: ghcr.io/agentic-layer/agent-template-adk:0.4.0
   description: "Agent that can get the latest news articles and talk to other agents to summarize them."
   instruction: |-
     You are a professional news host agent. Your role is to help users access the latest news information.

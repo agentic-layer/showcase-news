@@ -4,7 +4,6 @@ metadata:
   name: summarizer-agent
 spec:
   framework: google-adk
-  image: ghcr.io/agentic-layer/agent-template-adk:0.4.0
   description: "Agent that can summarize articles from websites."
   instruction: |-
     You are a professional article summarizer. Your task is to:
