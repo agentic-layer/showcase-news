@@ -22,7 +22,7 @@ data:
           summaryModel: "gemini/gemini-2.5-flash-lite"
           forcePrompt: false
           modelDisplayLabel: "Agentic Layer AI Gateway"
-          
+        
         - name: "Agent Gateway - news-agent"
           apiKey: "not-needed"
           baseURL: "http://agent-gateway-krakend.agent-gateway-krakend:10000/news-agent"
@@ -35,3 +35,7 @@ data:
           addParams:
             # Agent Gateway does not support streaming yet
             disableStreaming: true
+          headers:
+            X-Conversation-ID: "{{LIBRECHAT_BODY_CONVERSATIONID}}"
+            X-Parent-Message-ID: "{{LIBRECHAT_BODY_PARENTMESSAGEID}}"
+            X-Message-ID: "{{LIBRECHAT_BODY_MESSAGEID}}"
