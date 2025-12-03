@@ -418,7 +418,7 @@ kill %1 %2 %3 %4 %5  # Adjust numbers based on your running jobs
 
 # Delete deployed resources
 kubectl delete -k deploy/
-kubectl delete -f https://github.com/agentic-layer/agent-runtime-operator/releases/download/v0.7.0/install.yaml
+kubectl delete -f https://github.com/agentic-layer/agent-runtime-operator/releases/download/v0.13.0/install.yaml
 kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.2/cert-manager.yaml
 
 # Remove the built Docker image (optional)
