@@ -26,6 +26,7 @@ spec:
     - name: summarizer_agent
       agentRef:
         name: summarizer-agent
+      interaction_type: "tool_call"
   tools:
     - name: news_fetcher
       toolServerRef:
