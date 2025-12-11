@@ -6,7 +6,9 @@
     {
       "customType": "regex",
       "description": "Update Tilt extension repository version",
-      "fileMatch": ["^Tiltfile$"],
+      "managerFilePatterns": [
+        "/^Tiltfile$/"
+      ],
       "matchStrings": [
         "v1alpha1\\.extension_repo\\(name='agentic-layer',\\s*url='https://github\\.com/(?<depName>[^']+)',\\s*ref='(?<currentValue>[^']+)'\\)"
       ],
@@ -16,7 +18,9 @@
     {
       "customType": "regex",
       "description": "Update agent-runtime-operator version",
-      "fileMatch": ["^Tiltfile$"],
+      "managerFilePatterns": [
+        "/^Tiltfile$/"
+      ],
       "matchStrings": [
         "agent_runtime_install\\([^)]*version='(?<currentValue>[^']+)'[^)]*\\)"
       ],
@@ -27,7 +31,9 @@
     {
       "customType": "regex",
       "description": "Update ai-gateway-litellm-operator version",
-      "fileMatch": ["^Tiltfile$"],
+      "managerFilePatterns": [
+        "/^Tiltfile$/"
+      ],
       "matchStrings": [
         "ai_gateway_litellm_install\\([^)]*version='(?<currentValue>[^']+)'[^)]*\\)"
       ],
@@ -38,7 +44,9 @@
     {
       "customType": "regex",
       "description": "Update agent-gateway-krakend-operator version",
-      "fileMatch": ["^Tiltfile$"],
+      "managerFilePatterns": [
+        "/^Tiltfile$/"
+      ],
       "matchStrings": [
         "agent_gateway_krakend_install\\([^)]*version='(?<currentValue>[^']+)'[^)]*\\)"
       ],
