@@ -1,58 +1,5 @@
 {
   "extends": [
     "github>agentic-layer/renovate-config"
-  ],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "description": "Update Tilt extension repository version",
-      "managerFilePatterns": [
-        "/^Tiltfile$/"
-      ],
-      "matchStrings": [
-        "v1alpha1\\.extension_repo\\(name='agentic-layer',\\s*url='https://github\\.com/(?<depName>[^']+)',\\s*ref='(?<currentValue>[^']+)'\\)"
-      ],
-      "datasourceTemplate": "github-tags",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "description": "Update agent-runtime-operator version",
-      "managerFilePatterns": [
-        "/^Tiltfile$/"
-      ],
-      "matchStrings": [
-        "agent_runtime_install\\([^)]*version='(?<currentValue>[^']+)'[^)]*\\)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "agentic-layer/agent-runtime-operator",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "description": "Update ai-gateway-litellm-operator version",
-      "managerFilePatterns": [
-        "/^Tiltfile$/"
-      ],
-      "matchStrings": [
-        "ai_gateway_litellm_install\\([^)]*version='(?<currentValue>[^']+)'[^)]*\\)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "agentic-layer/ai-gateway-litellm-operator",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "description": "Update agent-gateway-krakend-operator version",
-      "managerFilePatterns": [
-        "/^Tiltfile$/"
-      ],
-      "matchStrings": [
-        "agent_gateway_krakend_install\\([^)]*version='(?<currentValue>[^']+)'[^)]*\\)"
-      ],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "agentic-layer/agent-gateway-krakend-operator",
-      "versioningTemplate": "semver"
-    }
   ]
 }
