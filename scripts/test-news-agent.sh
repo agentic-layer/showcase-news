@@ -30,13 +30,13 @@ echo -e "${BLUE}========================================${NC}"
 # Function to test Agent Gateway (OpenAI-compatible API)
 test_openai_api() {
     echo -e "${GREEN}[1] Testing via Agent Gateway - OpenAI-compatible API${NC}"
-    echo -e "    Endpoint: ${AGENT_GATEWAY_URL}/news-agent/chat/completions"
+    echo -e "    Endpoint: ${AGENT_GATEWAY_URL}/chat/completions"
     echo ""
 
-    curl -vfs "${AGENT_GATEWAY_URL}/news-agent/chat/completions" \
+    curl -vfs "${AGENT_GATEWAY_URL}/chat/completions" \
         -H "Content-Type: application/json" \
         -d '{
-            "model": "news-agent",
+            "model": "showcase-news/news-agent",
             "messages": [
                 {
                     "role": "user",

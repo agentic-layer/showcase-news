@@ -312,10 +312,10 @@ This variant has the advantage of exposing the agents via an (almost-) OpenAI co
 
 [source,bash]
 ----
-curl http://localhost:8004/news-agent/chat/completions \
+curl http://localhost:8004/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "news-agent",
+    "model": "showcase-news/news-agent",
     "messages": [
       {
         "role": "user",
