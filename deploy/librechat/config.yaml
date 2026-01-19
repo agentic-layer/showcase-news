@@ -23,12 +23,12 @@ data:
           forcePrompt: false
           modelDisplayLabel: "Agentic Layer AI Gateway"
         
-        - name: "Agent Gateway - news-agent"
+        - name: "Agent Gateway"
           apiKey: "not-needed"
-          baseURL: "http://agent-gateway-krakend.agent-gateway-krakend:10000/news-agent"
+          baseURL: "http://agent-gateway-krakend.agent-gateway-krakend:10000"
           models:
-            default: [ "news-agent" ]
-            fetch: false
+            default: [ "showcase-news/news-agent" ]
+            fetch: true
           titleConvo: false
           summarize: false
           forcePrompt: false
