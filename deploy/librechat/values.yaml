@@ -1,8 +1,0 @@
-librechat:
-  existingConfigYaml: "librechat-config"
-  configEnv:
-    ALLOW_REGISTRATION: "true"
-
-mongodb:
-  image:
-    tag: latest
