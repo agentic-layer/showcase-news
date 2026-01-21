@@ -1,0 +1,8 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Your release is named {{ .Release.Name }}.
+
+Documentation:
+
+  Platform: https://docs.agentic-layer.ai
+  GitHub: https://github.com/agentic-layer/showcase-news

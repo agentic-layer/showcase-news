@@ -1,0 +1,13 @@
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: ToolServer
+metadata:
+  name: news-fetcher
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "showcase-news.labels" . | nindent 4 }}
+spec:
+  protocol: mcp
+  transportType: http
+  image: {{ .Values.images.newsFetcher.repository }}:{{ .Values.images.newsFetcher.tag }}
+  port: 8000
+  replicas: 1

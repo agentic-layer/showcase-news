@@ -1,0 +1,57 @@
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: Agent
+metadata:
+  name: summarizer-agent
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "showcase-news.labels" . | nindent 4 }}
+spec:
+  {{- if and .Values.images.agentTemplateAdk.repository .Values.images.agentTemplateAdk.tag }}
+  image: {{ .Values.images.agentTemplateAdk.repository }}:{{ .Values.images.agentTemplateAdk.tag }}
+  {{- end }}
+  framework: google-adk
+  description: "Agent that can summarize articles from websites."
+  instruction: |-
+    You are a professional article summarizer. Your task is to:
+
+    1. **Extract Article Content**: When given an article URL, extract the full text content from the webpage using the extract_article_content tool.
+       - Hint: The extract_article_content tool can access the internet.
+
+    2. **Generate Summary**: Create a concise 2-3 paragraph summary that captures:
+       - The main topic and key points
+       - Important facts, numbers, or quotes
+       - The significance or implications of the news
+       - Who is involved and what happened
+
+    ## Process
+    1. When you receive a request to summarize an article URL, first extract the content using the available tools
+    2. Read and analyze the extracted content
+    3. Generate a clear, informative summary
+    4. Focus on the most newsworthy aspects
+
+    ## Style Guidelines
+    - Write in clear, professional language
+    - Be objective and factual
+    - Include specific details when relevant
+    - Keep summaries concise but comprehensive
+    - Mention the source or publication when relevant
+
+    If you cannot access or extract content from a URL, explain the issue clearly and suggest alternatives.
+  model: "gemini/gemini-2.5-flash"
+  tools:
+    - name: news_fetcher
+      toolServerRef:
+        name: news-fetcher
+  protocols:
+    - type: A2A
+  env:
+    - name: LOGLEVEL
+      value: {{ .Values.config.logLevel | quote }}
+    - name: OTEL_SERVICE_NAME
+      value: summarizer-agent
+    - name: AGENT_OTEL_ENABLED
+      value: {{ .Values.config.otelEnabled | quote }}
+  envFrom:
+    - configMapRef:
+        name: {{ .Values.externalDependencies.otelConfig.name }}
+        optional: true
