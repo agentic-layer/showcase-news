@@ -22,7 +22,7 @@ jobs:
       fail-fast: false # Ensures that if one build fails, the others will still run
       matrix:
         include:
-          - image_name: news-fetcher
+          - image_name: showcase-news-news-fetcher
             context: mcp-servers/news-fetcher/
 
     steps:

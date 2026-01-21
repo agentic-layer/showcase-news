@@ -7,13 +7,8 @@ namespace: showcase-news
 images:
   # News fetcher MCP server image
   newsFetcher:
-    repository: ghcr.io/agentic-layer/news-fetcher
+    repository: ghcr.io/agentic-layer/showcase-news-news-fetcher
     tag: latest
-
-  # Agent template ADK image - empty by default, operator sets based on framework
-  agentTemplateAdk:
-    repository: ""
-    tag: ""
 
 config:
   # Log level for agents (DEBUG, INFO, WARNING, ERROR)

@@ -48,8 +48,6 @@ k8s_yaml(helm(
     values=['chart/values.yaml'],
     set=[
         'images.newsFetcher.repository=news-fetcher',
-        'images.agentTemplateAdk.repository=ghcr.io/agentic-layer/agent-template-adk',
-        'images.agentTemplateAdk.tag=0.5.2',
     ],
 ))
 

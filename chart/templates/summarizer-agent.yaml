@@ -6,9 +6,6 @@ metadata:
   labels:
     {{- include "showcase-news.labels" . | nindent 4 }}
 spec:
-  {{- if and .Values.images.agentTemplateAdk.repository .Values.images.agentTemplateAdk.tag }}
-  image: {{ .Values.images.agentTemplateAdk.repository }}:{{ .Values.images.agentTemplateAdk.tag }}
-  {{- end }}
   framework: google-adk
   description: "Agent that can summarize articles from websites."
   instruction: |-
