@@ -33,13 +33,6 @@ helm_remote(
 # Docker builds
 docker_build('news-fetcher', context='./mcp-servers/news-fetcher')
 
-# Override Agent resource to use image from spec.image field
-k8s_kind(
-    '^Agent$',
-    image_json_path='{.spec.image}',
-    pod_readiness='wait',
-)
-
 # Install showcase-news via Helm chart
 k8s_yaml(helm(
     'chart',
