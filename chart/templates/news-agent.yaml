@@ -2,6 +2,9 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Agent
 metadata:
   name: news-agent
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "showcase-news.labels" . | nindent 4 }}
 spec:
   framework: google-adk
   description: "Agent that can get the latest news articles and talk to other agents to summarize them."
@@ -15,8 +18,8 @@ spec:
     - Call `fetch_article_titles_and_urls()` to get recent article titles and URLs
     - Present the articles in a clean, readable format
     - Show article titles, URLs, and dates
-    
-    ### 2. Article Summarization Requests  
+
+    ### 2. Article Summarization Requests
     When users ask to summarize a specific article:
     - Contact the summarizer agent to generate a summary
     - Present the summary to the user
@@ -35,11 +38,11 @@ spec:
     - type: A2A
   env:
     - name: LOGLEVEL
-      value: DEBUG
+      value: {{ .Values.config.logLevel | quote }}
     - name: OTEL_SERVICE_NAME
       value: news-agent
     - name: AGENT_OTEL_ENABLED
-      value: "true"
+      value: {{ .Values.config.otelEnabled | quote }}
   envFrom:
     - configMapRef:
-        name: otel-tempo-config
+        name: {{ .Values.externalDependencies.otelConfig.name }}

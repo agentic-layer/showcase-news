@@ -33,7 +33,18 @@ helm_remote(
 # Docker builds
 docker_build('news-fetcher', context='./mcp-servers/news-fetcher')
 
-# Apply Kubernetes manifests
+# Install showcase-news via Helm chart
+k8s_yaml(helm(
+    'chart',
+    name='showcase-news',
+    namespace='showcase-news',
+    values=['chart/values.yaml'],
+    set=[
+        'images.newsFetcher.repository=news-fetcher',
+    ],
+))
+
+# Install local-only resources via Kustomize
 k8s_yaml(kustomize('deploy'))
 
 # Showcase Components

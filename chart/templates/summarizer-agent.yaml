@@ -2,6 +2,9 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: Agent
 metadata:
   name: summarizer-agent
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "showcase-news.labels" . | nindent 4 }}
 spec:
   framework: google-adk
   description: "Agent that can summarize articles from websites."
@@ -23,7 +26,7 @@ spec:
     3. Generate a clear, informative summary
     4. Focus on the most newsworthy aspects
 
-    ## Style Guidelines  
+    ## Style Guidelines
     - Write in clear, professional language
     - Be objective and factual
     - Include specific details when relevant
@@ -40,12 +43,12 @@ spec:
     - type: A2A
   env:
     - name: LOGLEVEL
-      value: DEBUG
+      value: {{ .Values.config.logLevel | quote }}
     - name: OTEL_SERVICE_NAME
       value: summarizer-agent
     - name: AGENT_OTEL_ENABLED
-      value: "true"
+      value: {{ .Values.config.otelEnabled | quote }}
   envFrom:
     - configMapRef:
-        name: otel-tempo-config
+        name: {{ .Values.externalDependencies.otelConfig.name }}
         optional: true

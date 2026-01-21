@@ -240,7 +240,7 @@ Now deploy the main showcase components:
 
 [source,bash]
 ----
-kubectl apply -k deploy/showcase-news/
+helm install news-showcase ./chart
 ----
 
 This deploys:

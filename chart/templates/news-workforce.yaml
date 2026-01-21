@@ -2,6 +2,9 @@ apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: AgenticWorkforce
 metadata:
   name: news-workforce
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "showcase-news.labels" . | nindent 4 }}
 spec:
   # Human-readable name for the workforce
   name: "News workforce"
@@ -22,4 +25,4 @@ spec:
   # References to existing Agent resources in the cluster
   entryPointAgents:
     - name: news-agent
-      namespace: showcase-news
+      namespace: {{ .Values.namespace }}

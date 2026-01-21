@@ -1,0 +1,24 @@
+# Default values for showcase-news
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: showcase-news
+
+images:
+  # News fetcher MCP server image
+  newsFetcher:
+    repository: ghcr.io/agentic-layer/showcase-news-news-fetcher
+    tag: latest
+
+config:
+  # Log level for agents (DEBUG, INFO, WARNING, ERROR)
+  logLevel: DEBUG
+
+  # Enable OpenTelemetry tracing
+  otelEnabled: true
+
+# External dependencies (not created by this chart)
+externalDependencies:
+  # OpenTelemetry configuration ConfigMap (optional, for observability)
+  otelConfig:
+    name: otel-tempo-config
