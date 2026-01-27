@@ -6,7 +6,7 @@ metadata:
 apiVersion: runtime.agentic-layer.ai/v1alpha1
 kind: AiGateway
 metadata:
-  name: ai-gateway-litellm
+  name: ai-gateway
   namespace: ai-gateway
 spec:
   aiGatewayClassName: litellm
