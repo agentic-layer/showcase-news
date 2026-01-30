@@ -43,6 +43,8 @@ spec:
       value: news-agent
     - name: AGENT_OTEL_ENABLED
       value: {{ .Values.config.otelEnabled | quote }}
+    - name: AGENT_OTEL_CAPTURE_HTTP_BODIES
+      value: {{ .Values.config.otelCaptureHttpBodies | quote }}
   envFrom:
     - configMapRef:
         name: {{ .Values.externalDependencies.otelConfig.name }}

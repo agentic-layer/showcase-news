@@ -17,6 +17,9 @@ config:
   # Enable OpenTelemetry tracing
   otelEnabled: true
 
+  # Capture HTTP bodies in OpenTelemetry traces
+  otelCaptureHttpBodies: true
+
 # External dependencies (not created by this chart)
 externalDependencies:
   # OpenTelemetry configuration ConfigMap (optional, for observability)
