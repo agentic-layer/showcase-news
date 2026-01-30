@@ -319,7 +319,7 @@ curl http://localhost:8004/chat/completions \
     "messages": [
       {
         "role": "user",
-        "content": "What are the latest AI news? Summarize the top article."
+        "content": "What are the top 5 latest AI news? Summarize the first article."
       }
     ]
   }' | jq
@@ -342,7 +342,7 @@ curl http://localhost:8001/ \
         "parts": [
           {
             "kind": "text",
-            "text": "Whats the latest news in AI? Summarize the top article to me."
+            "text": "What are the top 5 latest AI news? Summarize the first article."
           }
         ],
         "messageId": "9229e770-767c-417b-a0b0-f0741243c579",

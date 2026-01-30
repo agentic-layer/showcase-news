@@ -4,6 +4,8 @@ update_settings(max_parallel_updates=10)
 load('ext://dotenv', 'dotenv')
 dotenv()
 
+load('ext://helm_remote', 'helm_remote')
+
 v1alpha1.extension_repo(name='agentic-layer', url='https://github.com/agentic-layer/tilt-extensions', ref='v0.8.0')
 
 v1alpha1.extension(name='cert-manager', repo_name='agentic-layer', repo_path='cert-manager')
@@ -12,7 +14,7 @@ cert_manager_install()
 
 v1alpha1.extension(name='agent-runtime', repo_name='agentic-layer', repo_path='agent-runtime')
 load('ext://agent-runtime', 'agent_runtime_install')
-agent_runtime_install(version='0.16.0')
+agent_runtime_install(version='0.17.2')
 
 v1alpha1.extension(name='ai-gateway-litellm', repo_name='agentic-layer', repo_path='ai-gateway-litellm')
 load('ext://ai-gateway-litellm', 'ai_gateway_litellm_install')
@@ -20,7 +22,14 @@ ai_gateway_litellm_install(version='0.3.2', instance=False)
 
 v1alpha1.extension(name='agent-gateway-krakend', repo_name='agentic-layer', repo_path='agent-gateway-krakend')
 load('ext://agent-gateway-krakend', 'agent_gateway_krakend_install')
-agent_gateway_krakend_install(version='0.5.0')
+agent_gateway_krakend_install(version='0.5.3', instance=False)
+
+helm_remote(
+    'observability-dashboard',
+    repo_url='oci://ghcr.io/agentic-layer/charts',
+    version='0.3.0',
+    namespace='observability-dashboard',
+)
 
 v1alpha1.extension(name='librechat', repo_name='agentic-layer', repo_path='librechat')
 load('ext://librechat', 'librechat_install')
@@ -51,7 +60,7 @@ k8s_resource('news-fetcher', labels=['showcase'], resource_deps=['agent-runtime'
 
 # Agentic Layer Components
 k8s_resource('ai-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards=['8005:4000'])
-k8s_resource('agent-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime', 'news-agent'], port_forwards='8004:8080')
+k8s_resource('agent-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards='8004:8080')
 k8s_resource('observability-dashboard', labels=['agentic-layer'], port_forwards='8100:8000')
 
 # Monitoring

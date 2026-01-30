@@ -3,4 +3,5 @@ kind: Kustomization
 resources:
   - lgtm.yaml
   - otel-tempo-config.yaml
-  - agentic-layer/
+  - ai-gateway.yaml
+  - agent-gateway.yaml
