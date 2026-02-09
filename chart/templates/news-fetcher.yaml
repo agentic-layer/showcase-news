@@ -11,3 +11,10 @@ spec:
   image: {{ .Values.images.newsFetcher.repository }}:{{ .Values.images.newsFetcher.tag }}
   port: 8000
   replicas: 1
+  env:
+    - name: OTEL_SERVICE_NAME
+      value: news-fetcher
+  envFrom:
+    - configMapRef:
+        name: {{ .Values.externalDependencies.otelConfig.name }}
+        optional: true

@@ -4,5 +4,5 @@ metadata:
   name: otel-tempo-config
   namespace: showcase-news
 data:
-  OTEL_SDK_DISABLED: "false"
+  OTEL_EXPORTER_OTLP_PROTOCOL: "http/json"
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://lgtm.monitoring.svc.cluster.local:4318"

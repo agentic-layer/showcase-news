@@ -1,8 +1,12 @@
 import logging
+import os
 
 import requests
 from bs4 import BeautifulSoup
 from fastmcp import FastMCP
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -11,6 +15,15 @@ from .rss_processor import RSSProcessor
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Configure OpenTelemetry (reads from OTEL_SERVICE_NAME, OTEL_EXPORTER_OTLP_ENDPOINT env vars)
+if os.environ.get("OTEL_EXPORTER_OTLP_PROTOCOL", "grpc") == "grpc":
+    from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+else:
+    from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+trace_provider = TracerProvider()
+trace_provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
+trace.set_tracer_provider(trace_provider)
 
 # Create MCP server
 mcp = FastMCP(name="News Fetcher")
