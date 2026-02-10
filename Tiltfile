@@ -73,16 +73,6 @@ if not google_api_key:
 
 # Create Kubernetes secrets from environment variables
 load('ext://secret', 'secret_from_dict')
-
-# Create secret for voice agent, which is not yet using the ai-gateway
-k8s_yaml(secret_from_dict(
-    name = "api-key-secrets",
-    namespace = "showcase-news",
-    # The ai-gateway expects the API key to be called <provider>_API_KEY
-    inputs = { "GEMINI_API_KEY": google_api_key }
-))
-
-# Create secret for ai-gateway
 k8s_yaml(secret_from_dict(
     name = "api-key-secrets",
     namespace = "ai-gateway",
