@@ -5,3 +5,5 @@ resources:
   - otel-tempo-config.yaml
   - ai-gateway.yaml
   - agent-gateway.yaml
+  - tool-gateway.yaml
+  - agent-runtime-config.yaml
