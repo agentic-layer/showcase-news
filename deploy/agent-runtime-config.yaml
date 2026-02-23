@@ -1,0 +1,8 @@
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: AgentRuntimeConfiguration
+metadata:
+  name: agent-runtime-configuration
+  namespace: agent-runtime-operator-system
+spec:
+  agentTemplateImages:
+    googleAdk: "ghcr.io/agentic-layer/agent-template-adk:0.7.0"
