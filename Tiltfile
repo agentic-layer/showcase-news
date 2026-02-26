@@ -28,6 +28,10 @@ v1alpha1.extension(name='tool-gateway-agentgateway', repo_name='agentic-layer', 
 load('ext://tool-gateway-agentgateway', 'tool_gateway_agentgateway_install')
 tool_gateway_agentgateway_install(version='0.1.0', instance=False)
 
+v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testbench')
+load('ext://testbench', 'testbench_install')
+testbench_install(version='0.5.1')
+
 helm_remote(
     'observability-dashboard',
     repo_url='oci://ghcr.io/agentic-layer/charts',
@@ -70,7 +74,7 @@ k8s_resource('observability-dashboard', labels=['agentic-layer'], port_forwards=
 k8s_resource('agent-runtime-configuration', labels=['agentic-layer'], resource_deps=['agent-runtime'])
 
 # Monitoring
-k8s_resource('lgtm', labels=['monitoring'], resource_deps=[], port_forwards=['3000:3000'])
+k8s_resource('lgtm', labels=['monitoring'], resource_deps=['testbench'], port_forwards=['3000:3000'])
 
 # Secrets for LLM API keys
 google_api_key = os.environ.get('GOOGLE_API_KEY', '')
@@ -85,3 +89,6 @@ k8s_yaml(secret_from_dict(
     # The ai-gateway expects the API key to be called <provider>_API_KEY
     inputs = { "GEMINI_API_KEY": google_api_key }
 ))
+
+k8s_resource('news-agent-test-workflow', resource_deps=['testkube'])
+k8s_resource('news-agent-test-workflow-trigger', resource_deps=['testkube'])

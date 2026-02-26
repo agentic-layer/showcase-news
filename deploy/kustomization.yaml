@@ -3,7 +3,11 @@ kind: Kustomization
 resources:
   - lgtm.yaml
   - otel-tempo-config.yaml
+  - otel-testbench-config.yaml
   - ai-gateway.yaml
   - agent-gateway.yaml
   - tool-gateway.yaml
   - agent-runtime-config.yaml
+  - experiment.yaml
+  - news-agent-test-workflow.yaml
+  - news-agent-test-workflow-trigger.yaml

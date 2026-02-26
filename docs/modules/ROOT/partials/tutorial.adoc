@@ -118,6 +118,7 @@ Tilt will automatically:
 * Deploy the Agentic Layer observability dashboard
 * Create required secrets from your environment variables
 * Build and deploy the news-fetcher MCP server
+* Install the Testbench and deploy the test workflow with automatic trigger
 * Set up port forwarding for easy access
 
 Once Tilt shows all resources as ready, skip to Step 3.
@@ -379,6 +380,48 @@ curl http://localhost:8002/ \
     }
   }' | jq
 ----
+
+== Step 5: Automated Agent Evaluation
+
+The showcase includes an automated evaluation pipeline powered by the https://github.com/agentic-layer/testbench[Testbench^] — a Kubernetes-native evaluation system from the Agentic Layer platform. It executes test scenarios against the news-agent via the A2A protocol and scores responses using an LLM-as-a-judge approach with https://docs.ragas.io/[RAGAS^] metrics. The pipeline is orchestrated by https://testkube.io/[Testkube^] and runs automatically whenever the agent is redeployed.
+
+=== Experiment Configuration
+
+The file `deploy/experiment.yaml` defines the test scenarios as a ConfigMap. An experiment follows a three-level hierarchy:
+
+* **Experiment** — top-level configuration (LLM judge model, default threshold)
+** **Scenario** — a named group of steps (e.g., "Weather in New York")
+*** **Step** — a single user query with expected reference data and metrics to evaluate
+
+The experiment specifies:
+
+* **LLM Judge Model**: `gemini-2.5-flash-lite` — a fast, cost-effective model used to evaluate agent responses via the AI Gateway.
+* **Default Threshold**: `0.9` — the minimum score a metric must archive to pass the test.
+* **Evaluation Metrics** (per step):
+  ** `AgentGoalAccuracyWithoutReference` — Did the agent fulfill the user's goal?
+  ** `ToolCallAccuracy` — Did the agent call the correct tools with the right arguments?
+  ** `TopicAdherence` — Did the agent's response stay on topic?
+
+Scenarios can be single-step or multi-step conversations (the A2A protocol maintains conversation context across steps via a shared context ID). The showcase includes deliberately incorrect references to test negative cases.
+
+=== Test Workflow
+
+The file `deploy/news-agent-test-workflow.yaml` defines a Testkube `TestWorkflow` resource in the `testkube` namespace. It mounts the experiment ConfigMap and chains four `TestWorkflowTemplate` phases from the Testbench:
+
+1. **Run** — Sends each scenario's queries to the news-agent via the A2A protocol (`http://news-agent.showcase-news:8000`) and records responses along with OpenTelemetry trace IDs.
+2. **Evaluate** — Scores the agent's responses using RAGAS metrics with the configured LLM judge (via the AI Gateway).
+3. **Publish** — Exports per-sample evaluation metrics as OpenTelemetry gauges to the OTLP collector, where they can be visualized in Grafana.
+4. **Visualize** — Generates a self-contained HTML dashboard with summary cards, score charts, metric distribution histograms, and a searchable results table.
+
+=== Automatic Test Trigger
+
+The file `deploy/news-agent-test-workflow-trigger.yaml` defines a Testkube `TestTrigger` that watches the `news-agent` Deployment in the `showcase-news` namespace. Whenever the deployment is **modified** (e.g., after a new image rollout), the trigger automatically runs the test workflow. This provides continuous quality assurance without manual intervention.
+
+=== Running Tests
+
+For **Tilt users**, the Testbench and Testkube are installed automatically and the test workflow + trigger are deployed as part of `tilt up`. Tests run automatically on every deployment change.
+
+For **manual installation (Option B)**, the test workflow resources are already included in the kustomization (`deploy/kustomization.yaml`) and will be applied with `kubectl apply -k deploy/`. However, you must install https://testkube.io/[Testkube^] and the https://github.com/agentic-layer/testbench[Testbench Helm chart^] separately for the workflow to execute.
 
 == Understanding the Architecture
 

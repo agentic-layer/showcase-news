@@ -25,6 +25,54 @@ spec:
       port: 4318
       targetPort: 4318
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: lgtm
+  namespace: monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: lgtm-sidecar
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: lgtm-sidecar
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: lgtm-sidecar
+subjects:
+  - kind: ServiceAccount
+    name: lgtm
+    namespace: monitoring
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-provisioning
+  namespace: monitoring
+data:
+  sidecar.yaml: |
+    apiVersion: 1
+    providers:
+      - name: 'sidecar-provider'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          # Point this to the root of the volume mount
+          path: /var/lib/grafana/dashboards/sidecar
+          foldersFromFilesStructure: true
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,6 +88,7 @@ spec:
       labels:
         app: lgtm
     spec:
+      serviceAccountName: lgtm
       containers:
         - name: lgtm
           image: grafana/otel-lgtm:latest
@@ -69,6 +118,27 @@ spec:
               mountPath: /data/prometheus
             - name: pyroscope-storage
               mountPath: /data/pyroscope
+            - name: grafana-dashboards
+              mountPath: /var/lib/grafana/dashboards/sidecar
+            - name: grafana-dashboard-provisioning
+              mountPath: /otel-lgtm/grafana/conf/provisioning/dashboards/sidecar.yaml
+              subPath: sidecar.yaml
+        - name: dashboard-sidecar
+          image: kiwigrid/k8s-sidecar:1.28.0
+          env:
+            - name: LABEL
+              value: "grafana_dashboard"
+            - name: LABEL_VALUE
+              value: "1"
+            - name: FOLDER
+              value: /var/lib/grafana/dashboards/sidecar
+            - name: NAMESPACE
+              value: ALL
+            - name: RESOURCE
+              value: configmap
+          volumeMounts:
+            - name: grafana-dashboards
+              mountPath: /var/lib/grafana/dashboards/sidecar
       volumes:
         - name: tempo-data
           emptyDir: {}
@@ -82,3 +152,8 @@ spec:
           emptyDir: {}
         - name: pyroscope-storage
           emptyDir: {}
+        - name: grafana-dashboards
+          emptyDir: {}
+        - name: grafana-dashboard-provisioning
+          configMap:
+            name: grafana-dashboard-provisioning

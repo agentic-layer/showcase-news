@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: experiment
+  namespace: testkube
+data:
+  experiment.json: |
+    {
+      "llm_as_a_judge_model": "gemini-2.5-flash-lite",
+      "default_threshold": 0.9,
+      "scenarios": [
+        {
+          "name": "Fetch latest news",
+          "steps": [
+            {
+              "input": "What are the latest news headlines?",
+              "reference": {
+                "tool_calls": [
+                  {
+                    "name": "fetch_article_titles_and_urls",
+                    "args": {}
+                  }
+                ],
+                "topics": ["news"]
+              },
+              "metrics": [
+                {
+                  "metric_name": "AgentGoalAccuracyWithoutReference"
+                },
+                {
+                  "metric_name": "ToolCallAccuracy"
+                },
+                {
+                  "metric_name": "TopicAdherence",
+                  "parameters": {
+                    "mode": "precision"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Off-topic request",
+          "steps": [
+            {
+              "input": "What's the weather like in Berlin right now?",
+              "reference": {
+                "topics": ["news"]
+              },
+              "metrics": [
+                {
+                  "metric_name": "AgentGoalAccuracyWithoutReference"
+                },
+                {
+                  "metric_name": "TopicAdherence",
+                  "parameters": {
+                    "mode": "precision"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Fetch news then summarize (multi-step)",
+          "steps": [
+            {
+              "input": "Show me the latest news articles.",
+              "reference": {
+                "tool_calls": [
+                  {
+                    "name": "fetch_article_titles_and_urls",
+                    "args": {}
+                  }
+                ]
+              },
+              "metrics": [
+                {
+                  "metric_name": "AgentGoalAccuracyWithoutReference"
+                },
+                {
+                  "metric_name": "ToolCallAccuracy"
+                }
+              ]
+            },
+            {
+              "input": "Please summarize the first article.",
+              "reference": {
+                "tool_calls": [
+                  {
+                    "name": "summarizer_agent",
+                    "args": {}
+                  }
+                ]
+              },
+              "metrics": [
+                {
+                  "metric_name": "AgentGoalAccuracyWithoutReference"
+                },
+                {
+                  "metric_name": "ToolCallAccuracy"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
