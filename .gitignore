@@ -208,3 +208,6 @@ __marimo__/
 
 # Env files
 .env
+
+# OMC Files
+.omc
