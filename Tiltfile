@@ -18,7 +18,7 @@ agent_runtime_install(version='0.20.3')
 
 v1alpha1.extension(name='ai-gateway-litellm', repo_name='agentic-layer', repo_path='ai-gateway-litellm')
 load('ext://ai-gateway-litellm', 'ai_gateway_litellm_install')
-ai_gateway_litellm_install(version='0.5.0', instance=False)
+ai_gateway_litellm_install(version='0.7.2', instance=False)
 
 v1alpha1.extension(name='agent-gateway-krakend', repo_name='agentic-layer', repo_path='agent-gateway-krakend')
 load('ext://agent-gateway-krakend', 'agent_gateway_krakend_install')
@@ -90,6 +90,11 @@ k8s_yaml(secret_from_dict(
     inputs = { "GEMINI_API_KEY": google_api_key }
 ))
 
+k8s_resource(
+    objects=['testkube:namespace'],
+    new_name='testkube-namespace',
+    labels=['testing'],
+)
 k8s_resource(
     objects=['otel-testbench-config:configmap:testkube'],
     new_name='otel-testbench-config',
