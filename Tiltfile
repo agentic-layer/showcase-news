@@ -90,5 +90,17 @@ k8s_yaml(secret_from_dict(
     inputs = { "GEMINI_API_KEY": google_api_key }
 ))
 
+k8s_resource(
+    objects=['otel-testbench-config:configmap:testkube'],
+    new_name='otel-testbench-config',
+    labels=['testing'],
+    resource_deps=['testkube']
+)
+k8s_resource(
+    objects=['experiment:configmap:testkube'],
+    new_name='experiment',
+    labels=['testing'],
+    resource_deps=['testkube']
+)
 k8s_resource('news-agent-test-workflow', resource_deps=['testkube'])
 k8s_resource('news-agent-test-workflow-trigger', resource_deps=['testkube'])
