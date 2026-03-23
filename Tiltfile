@@ -22,7 +22,7 @@ ai_gateway_litellm_install(version='0.7.3', instance=False)
 
 v1alpha1.extension(name='agent-gateway-krakend', repo_name='agentic-layer', repo_path='agent-gateway-krakend')
 load('ext://agent-gateway-krakend', 'agent_gateway_krakend_install')
-agent_gateway_krakend_install(version='0.6.5', instance=False)
+agent_gateway_krakend_install(version='0.6.6', instance=False)
 
 v1alpha1.extension(name='tool-gateway-agentgateway', repo_name='agentic-layer', repo_path='tool-gateway-agentgateway')
 load('ext://tool-gateway-agentgateway', 'tool_gateway_agentgateway_install')
