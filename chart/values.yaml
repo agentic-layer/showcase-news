@@ -20,8 +20,10 @@ config:
   # Capture HTTP bodies in OpenTelemetry traces
   otelCaptureHttpBodies: true
 
-# External dependencies (not created by this chart)
-externalDependencies:
-  # OpenTelemetry configuration ConfigMap (optional, for observability)
-  otelConfig:
-    name: otel-tempo-config
+# Extra environment variables applied to all agents and tool servers
+# Example:
+#  - name: OTEL_EXPORTER_OTLP_PROTOCOL
+#    value: "http/protobuf"
+#  - name: OTEL_EXPORTER_OTLP_ENDPOINT
+#    value: "http://lgtm.monitoring.svc.cluster.local:4318"
+extraEnv: []

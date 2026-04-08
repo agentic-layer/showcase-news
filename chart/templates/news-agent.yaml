@@ -45,6 +45,6 @@ spec:
       value: {{ .Values.config.otelEnabled | quote }}
     - name: AGENT_OTEL_CAPTURE_HTTP_BODIES
       value: {{ .Values.config.otelCaptureHttpBodies | quote }}
-  envFrom:
-    - configMapRef:
-        name: {{ .Values.externalDependencies.otelConfig.name }}
+  {{- with .Values.extraEnv }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}

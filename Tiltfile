@@ -54,6 +54,10 @@ k8s_yaml(helm(
     values=['chart/values.yaml'],
     set=[
         'images.newsFetcher.repository=news-fetcher',
+        'extraEnv[0].name=OTEL_EXPORTER_OTLP_PROTOCOL',
+        'extraEnv[0].value=http/protobuf',
+        'extraEnv[1].name=OTEL_EXPORTER_OTLP_ENDPOINT',
+        'extraEnv[1].value=http://lgtm.monitoring.svc.cluster.local:4318',
     ],
 ))
 

@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - testkube-namespace.yaml
   - lgtm.yaml
-  - otel-tempo-config.yaml
   - otel-testbench-config.yaml
   - ai-gateway.yaml
   - agent-gateway.yaml
