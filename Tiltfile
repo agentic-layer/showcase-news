@@ -1,4 +1,4 @@
-update_settings(max_parallel_updates=10, k8s_upsert_timeout_secs=600)
+update_settings(max_parallel_updates=2, k8s_upsert_timeout_secs=600)
 
 # Load .env file for environment variables
 load('ext://dotenv', 'dotenv')
@@ -66,9 +66,9 @@ k8s_yaml(kustomize('deploy'))
 
 # Showcase Components
 k8s_resource('news-workforce', labels=['showcase'], resource_deps=['agent-runtime'], pod_readiness='ignore')
-k8s_resource('news-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher', 'summarizer-agent'], port_forwards='8001:8000')
-k8s_resource('summarizer-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher'], port_forwards='8002:8000')
-k8s_resource('news-fetcher', labels=['showcase'], resource_deps=['agent-runtime'], port_forwards='8003:8000')
+k8s_resource('news-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher', 'summarizer-agent', 'lgtm'], port_forwards='8001:8000')
+k8s_resource('summarizer-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher', 'lgtm'], port_forwards='8002:8000')
+k8s_resource('news-fetcher', labels=['showcase'], resource_deps=['agent-runtime', 'lgtm'], port_forwards='8003:8000')
 
 # Agentic Layer Components
 k8s_resource('ai-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards=['8005:4000'])
