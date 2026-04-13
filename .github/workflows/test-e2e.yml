@@ -38,3 +38,23 @@ jobs:
           curl --retry 5 --retry-connrefused -vf http://localhost:8004/news-agent/.well-known/agent-card.json
 
           ./scripts/test-news-agent.sh all
+
+      - name: Logs
+        if: always()
+        run: |
+          echo ""
+          echo "Kubernetes Pod Statuses:"
+          kubectl get pods --all-namespaces
+
+          echo ""
+          echo "Agent Gateway Logs:"
+          kubectl logs -n agent-gateway -l app=agent-gateway || true
+
+          echo ""
+          echo "AI Gateway Logs:"
+          kubectl logs -n ai-gateway -l app=ai-gateway || true
+
+          echo ""
+          echo "Agent Logs:"
+          kubectl logs -n showcase-news -l app=news-agent || true
+          kubectl logs -n showcase-news -l app=summarizer-agent || true
