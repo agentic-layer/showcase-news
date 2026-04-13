@@ -6,7 +6,7 @@ dotenv()
 
 load('ext://helm_remote', 'helm_remote')
 
-v1alpha1.extension_repo(name='agentic-layer', url='https://github.com/agentic-layer/tilt-extensions', ref='v0.14.0')
+v1alpha1.extension_repo(name='agentic-layer', url='https://github.com/agentic-layer/tilt-extensions', ref='v0.15.0')
 
 v1alpha1.extension(name='cert-manager', repo_name='agentic-layer', repo_path='cert-manager')
 load('ext://cert-manager', 'cert_manager_install')
@@ -30,7 +30,7 @@ tool_gateway_agentgateway_install(version='0.2.3', instance=False)
 
 v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testbench')
 load('ext://testbench', 'testbench_install')
-testbench_install(version='0.5.1', testkube_version="2.8.3")
+testbench_install(version='0.8.0', testkube_version="2.8.3", operator_version="0.8.0")
 
 helm_remote(
     'observability-dashboard',
