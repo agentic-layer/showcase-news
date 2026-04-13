@@ -1,4 +1,4 @@
-update_settings(max_parallel_updates=2, k8s_upsert_timeout_secs=600)
+update_settings(max_parallel_updates=10, k8s_upsert_timeout_secs=600)
 
 # Load .env file for environment variables
 load('ext://dotenv', 'dotenv')
@@ -30,7 +30,7 @@ tool_gateway_agentgateway_install(version='0.2.3', instance=False)
 
 v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testbench')
 load('ext://testbench', 'testbench_install')
-testbench_install(version='0.5.1')
+testbench_install(version='0.5.1', testkube_version="2.8.3")
 
 helm_remote(
     'observability-dashboard',
@@ -78,7 +78,7 @@ k8s_resource('observability-dashboard', labels=['agentic-layer'], port_forwards=
 k8s_resource('agent-runtime-configuration', labels=['agentic-layer'], resource_deps=['agent-runtime'])
 
 # Monitoring
-k8s_resource('lgtm', labels=['monitoring'], resource_deps=['testbench'], port_forwards=['3000:3000'])
+k8s_resource('lgtm', labels=['monitoring'], port_forwards=['3000:3000'])
 
 # Secrets for LLM API keys
 google_api_key = os.environ.get('GOOGLE_API_KEY', '')
@@ -97,19 +97,19 @@ k8s_yaml(secret_from_dict(
 k8s_resource(
     objects=['testkube:namespace'],
     new_name='testkube-namespace',
-    labels=['testing'],
+    labels=['testbench'],
 )
 k8s_resource(
     objects=['otel-testbench-config:configmap:testkube'],
     new_name='otel-testbench-config',
-    labels=['testing'],
+    labels=['testbench'],
     resource_deps=['testkube']
 )
 k8s_resource(
     objects=['experiment:configmap:testkube'],
     new_name='experiment',
-    labels=['testing'],
+    labels=['testbench'],
     resource_deps=['testkube']
 )
-k8s_resource('news-agent-test-workflow', resource_deps=['testkube'])
-k8s_resource('news-agent-test-workflow-trigger', resource_deps=['testkube'])
+k8s_resource('news-agent-test-workflow', labels=['showcase'], resource_deps=['testkube'])
+k8s_resource('news-agent-test-workflow-trigger', labels=['showcase'], resource_deps=['testkube'])
