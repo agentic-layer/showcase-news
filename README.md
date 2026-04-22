@@ -17,11 +17,10 @@ For detailed setup instructions and a step-by-step tutorial, see our comprehensi
 
 ### Quick Start
 
-If you have Docker, kubectl, and Tilt installed:
-
-1. Clone this repo and set your `GOOGLE_API_KEY` environment variable
-2. Point kubectl to a local Kubernetes cluster
-3. Run `tilt up` and wait for all components to start
+1. Install [mise](https://mise.jdx.dev/) and run `mise install` to set up all development tools
+2. Clone this repo and set your `GOOGLE_API_KEY` environment variable
+3. Point kubectl to a local Kubernetes cluster (Docker Desktop or similar)
+4. Run `tilt up` and wait for all components to start
 
 For additional tools, try the [a2a-inspector](https://github.com/a2aproject/a2a-inspector) for GUI-based agent
 interaction. 
