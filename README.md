@@ -13,7 +13,7 @@ our [documentation](https://docs.agentic-layer.ai/).
 
 For detailed setup instructions and a step-by-step tutorial, see our comprehensive guide:
 
-**📖 [News Showcase Tutorial](https://docs.agentic-layer.ai/home/main/tutorials/showcase-news.html)**
+**📖 [News Showcase Tutorial](https://docs.agentic-layer.ai/showcase-news/index.html)**
 
 ### Quick Start
 
