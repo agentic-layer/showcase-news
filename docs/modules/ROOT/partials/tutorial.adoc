@@ -145,7 +145,7 @@ kubectl wait --for=condition=Ready pods --all -n cert-manager --timeout=60s
 
 ==== Install Agent Runtime Operator
 
-The Agent Runtime Operator manages AI `Agents` and MCP `ToolServers` as Kubernetes custom resources.
+The Agent Runtime Operator manages AI `Agents`, MCP `ToolServers`, and `ToolRoutes` as Kubernetes custom resources.
 
 See the xref:agent-runtime-operator:agent-runtime:how-to-guide.adoc[agent-runtime-operator] installation instructions.
 
