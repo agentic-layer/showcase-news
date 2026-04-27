@@ -37,8 +37,9 @@ spec:
   model: "gemini/gemini-2.5-flash"
   tools:
     - name: news_fetcher
-      toolServerRef:
-        name: news-fetcher
+      upstream:
+        toolRouteRef:
+          name: news-fetcher
   protocols:
     - type: A2A
   env:

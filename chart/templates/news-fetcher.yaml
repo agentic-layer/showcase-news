@@ -17,3 +17,19 @@ spec:
   {{- with .Values.extraEnv }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
+---
+apiVersion: runtime.agentic-layer.ai/v1alpha1
+kind: ToolRoute
+metadata:
+  name: news-fetcher
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "showcase-news.labels" . | nindent 4 }}
+spec:
+  {{- with .Values.toolGateway.ref }}
+  toolGatewayRef:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  upstream:
+    toolServerRef:
+      name: news-fetcher

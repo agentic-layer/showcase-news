@@ -6,7 +6,7 @@ dotenv()
 
 load('ext://helm_remote', 'helm_remote')
 
-v1alpha1.extension_repo(name='agentic-layer', url='https://github.com/agentic-layer/tilt-extensions', ref='v0.15.1')
+v1alpha1.extension_repo(name='agentic-layer', url='https://github.com/agentic-layer/tilt-extensions', ref='v0.17.0')
 
 v1alpha1.extension(name='cert-manager', repo_name='agentic-layer', repo_path='cert-manager')
 load('ext://cert-manager', 'cert_manager_install')
@@ -14,7 +14,7 @@ cert_manager_install()
 
 v1alpha1.extension(name='agent-runtime', repo_name='agentic-layer', repo_path='agent-runtime')
 load('ext://agent-runtime', 'agent_runtime_install')
-agent_runtime_install()
+agent_runtime_install(version='0.28.0-rc.2')
 
 v1alpha1.extension(name='ai-gateway-litellm', repo_name='agentic-layer', repo_path='ai-gateway-litellm')
 load('ext://ai-gateway-litellm', 'ai_gateway_litellm_install')
@@ -26,7 +26,7 @@ agent_gateway_krakend_install(instance=False)
 
 v1alpha1.extension(name='tool-gateway-agentgateway', repo_name='agentic-layer', repo_path='tool-gateway-agentgateway')
 load('ext://tool-gateway-agentgateway', 'tool_gateway_agentgateway_install')
-tool_gateway_agentgateway_install(instance=False)
+tool_gateway_agentgateway_install(version='0.3.0-rc.2', instance=False)
 
 v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testbench')
 load('ext://testbench', 'testbench_install')
@@ -66,9 +66,10 @@ k8s_yaml(kustomize('deploy'))
 
 # Showcase Components
 k8s_resource('news-workforce', labels=['showcase'], resource_deps=['agent-runtime'], pod_readiness='ignore')
-k8s_resource('news-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher', 'summarizer-agent', 'lgtm'], port_forwards='8001:8000')
-k8s_resource('summarizer-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher', 'lgtm'], port_forwards='8002:8000')
-k8s_resource('news-fetcher', labels=['showcase'], resource_deps=['agent-runtime', 'lgtm'], port_forwards='8003:8000')
+k8s_resource('news-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher:toolserver', 'summarizer-agent', 'lgtm'], port_forwards='8001:8000')
+k8s_resource('summarizer-agent', labels=['showcase'], resource_deps=['agent-runtime', 'news-fetcher:toolserver', 'lgtm'], port_forwards='8002:8000')
+k8s_resource('news-fetcher:toolserver', labels=['showcase'], resource_deps=['agent-runtime', 'lgtm'], port_forwards='8003:8000')
+k8s_resource('news-fetcher:toolroute', labels=['showcase'], resource_deps=['agent-runtime'])
 
 # Agentic Layer Components
 k8s_resource('ai-gateway', labels=['agentic-layer'], resource_deps=['agent-runtime'], port_forwards=['8005:4000'])
