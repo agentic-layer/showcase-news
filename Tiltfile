@@ -26,7 +26,7 @@ agent_gateway_krakend_install(instance=False)
 
 v1alpha1.extension(name='tool-gateway-agentgateway', repo_name='agentic-layer', repo_path='tool-gateway-agentgateway')
 load('ext://tool-gateway-agentgateway', 'tool_gateway_agentgateway_install')
-tool_gateway_agentgateway_install(version='0.3.0', instance=False)
+tool_gateway_agentgateway_install(version='0.4.0', instance=False)
 
 v1alpha1.extension(name='testbench', repo_name='agentic-layer', repo_path='testbench')
 load('ext://testbench', 'testbench_install')
