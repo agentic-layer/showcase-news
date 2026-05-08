@@ -158,7 +158,7 @@ The Agentic Layer team has developed an example implementation of the AgentGatew
 
 To instantiate an AgentGateway:
 
-1. Install an operator, e.g. the xref:agent-gateway-krakend-operator:operator:how-to-guide.adoc[agent-gateway-krakend-operator].
+1. Install an operator, e.g. the xref:agent-gateway-krakend-operator::how-to-guides/install.adoc[agent-gateway-krakend-operator].
 
 2. Apply an `AgentGateway` using `kubectl apply` (see xref:agent-runtime-operator:agent-gateways:how-to-guide.adoc[instructions]).
 
