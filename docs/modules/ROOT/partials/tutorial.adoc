@@ -172,7 +172,7 @@ One example implementation of the AiGateway specification, maintained by the Age
 
 To instantiate an AIGateway:
 
-1. Install an operator, e.g. the xref:ai-gateway-litellm-operator:operator:how-to-guide.adoc[ai-gateway-litellm-operator].
+1. Install an operator, e.g. the xref:ai-gateway-litellm-operator::how-to-guides/install.adoc[ai-gateway-litellm-operator].
 2. Apply an `AiGateway` instance using `kubectl apply` (see xref:agent-runtime-operator:ai-gateways:how-to-guide.adoc[instructions].
 
 
