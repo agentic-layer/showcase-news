@@ -8,3 +8,10 @@ kind: ToolGateway
 metadata:
   name: tool-gateway
   namespace: tool-gateway
+spec:
+  toolGatewayClassName: agentgateway
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://lgtm.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc/protobuf"
