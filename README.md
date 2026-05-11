@@ -1,26 +1,32 @@
 # Agentic AI News Showcase
 
-This showcase demonstrates multi-agent AI communication using the Agentic Layer platform.
-
-Find out more about the Agentic Layer on our [landing page](http://agentic-layer.ai/) and in
-our [documentation](https://docs.agentic-layer.ai/).
+A multi-agent demo built on the [Agentic Layer](https://agentic-layer.ai/) platform: a News agent fetches articles via an MCP server, delegates summarisation to a sub-agent over A2A, and all interactions are traced through the observability dashboard.
 
 ![demo.png](docs/modules/ROOT/images/demo.png)
 
----
+📖 **Step-by-step tutorial:** https://docs.agentic-layer.ai/showcase-news/
 
-## Getting Started
+## Development
 
-For detailed setup instructions and a step-by-step tutorial, see our comprehensive guide:
+### Prerequisites
 
-**📖 [News Showcase Tutorial](https://docs.agentic-layer.ai/home/main/tutorials/showcase-news.html)**
+- **[mise](https://mise.jdx.dev/)** (pins every tool to the version this repo uses)
+- A local **Kubernetes** cluster (Docker Desktop, kind, colima, ...) with `kubectl` pointing at it
+- A **`GOOGLE_API_KEY`** for Gemini models
 
-### Quick Start
+### Build and run locally
 
-1. Install [mise](https://mise.jdx.dev/) and run `mise install` to set up all development tools
-2. Clone this repo and set your `GOOGLE_API_KEY` environment variable
-3. Point kubectl to a local Kubernetes cluster (Docker Desktop or similar)
-4. Run `tilt up` and wait for all components to start
+```shell
+# Install Tilt, kubectl, helm, etc.
+mise install
+# Provide the Gemini API key
+export GOOGLE_API_KEY=<your-key>
+# Start the showcase
+tilt up
+```
 
-For additional tools, try the [a2a-inspector](https://github.com/a2aproject/a2a-inspector) for GUI-based agent
-interaction. 
+Wait until all components are green in the Tilt UI.
+
+### Verify the local deploy
+
+Once Tilt reports everything healthy, exercise the news agent end-to-end. The [tutorial](https://docs.agentic-layer.ai/showcase-news/) walks through the available endpoints and example questions. For GUI-based agent interaction try the [a2a-inspector](https://github.com/a2aproject/a2a-inspector).
