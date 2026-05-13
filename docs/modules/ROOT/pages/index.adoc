@@ -397,7 +397,7 @@ The file `deploy/experiment.yaml` defines the test scenarios as a ConfigMap. An 
 
 The experiment specifies:
 
-* **LLM Judge Model**: `gemini-2.5-flash-lite` — a fast, cost-effective model used to evaluate agent responses via the AI Gateway.
+* **LLM Judge Model**: `gemini-3.1-flash-lite` — a fast, cost-effective model used to evaluate agent responses via the AI Gateway.
 * **Default Threshold**: `0.9` — the minimum score a metric must archive to pass the test.
 * **Evaluation Metrics** (per step):
   ** `AgentGoalAccuracyWithoutReference` — Did the agent fulfill the user's goal?
