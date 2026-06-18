@@ -81,7 +81,7 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v5
         with:
-          version: 'v4.2.1'
+          version: 'v4.2.2'
 
       - name: Determine Chart Version
         id: version
