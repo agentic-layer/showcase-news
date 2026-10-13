@@ -1,4 +1,4 @@
-FROM python:3.14-slim-trixie
+FROM python:3.15-slim-trixie
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:0.12 /uv /bin/uv
